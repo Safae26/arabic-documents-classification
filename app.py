@@ -525,6 +525,168 @@ st.markdown("""
             padding: 2rem;
         }
     }
+
+        /* ===== STYLES MANQUANTS POUR LA VISIBILITÉ ===== */
+
+        /* 1. Tous les textes des widgets Streamlit */
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea,
+        .stSelectbox > div > div > div,
+        .stSlider > div > div > div,
+        .stNumberInput > div > div > input,
+        .stDateInput > div > div > input,
+        .stTimeInput > div > div > input,
+        .stMultiSelect > div > div > div,
+        .stRadio > label,
+        .stCheckbox > label,
+        .stFileUploader > label {
+            color: var(--text-primary) !important;
+        }
+
+        /* 2. Labels des champs de saisie */
+        .stTextInput label,
+        .stTextArea label,
+        .stSelectbox label,
+        .stSlider label,
+        .stNumberInput label,
+        .stDateInput label,
+        .stTimeInput label,
+        .stMultiSelect label {
+            color: var(--text-secondary) !important;
+            font-weight: 600;
+        }
+
+        /* 3. Placeholders */
+        .stTextInput input::placeholder,
+        .stTextArea textarea::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.7;
+        }
+
+        /* 4. Sélecteurs et options */
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="menu"] > div > div {
+            background-color: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+        }
+
+        div[data-baseweb="popover"] > div {
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        /* 5. Options dans les listes déroulantes */
+        div[data-baseweb="menu"] li {
+            color: var(--text-primary) !important;
+            background-color: var(--card-bg) !important;
+        }
+
+        div[data-baseweb="menu"] li:hover {
+            background-color: var(--primary-900) !important;
+        }
+
+        /* 6. Slider */
+        .stSlider > div > div > div > div {
+            background-color: var(--primary-500) !important;
+        }
+
+        .stSlider > div > div > div > div > div {
+            background-color: var(--primary-300) !important;
+            border: 2px solid var(--text-primary) !important;
+        }
+
+        /* 7. Cases à cocher */
+        .stCheckbox input[type="checkbox"]:checked + span {
+            background-color: var(--primary-500) !important;
+            border-color: var(--primary-500) !important;
+        }
+
+        /* 8. Tooltips */
+        [data-testid="stTooltipContent"] {
+            background-color: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        /* 9. Messages d'erreur et succès */
+        .stException,
+        .stAlert,
+        .stToast {
+            color: var(--text-primary) !important;
+        }
+
+        /* 10. DataFrames et tables */
+        .stDataFrame,
+        .dataframe,
+        table {
+            color: var(--text-primary) !important;
+        }
+
+        .dataframe th,
+        .dataframe td {
+            color: var(--text-primary) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        /* 11. Texte dans les onglets */
+        .stTabs [data-baseweb="tab"] > div > div {
+            color: inherit !important;
+        }
+
+        /* 12. Texte dans les expanders */
+        .streamlit-expanderHeader > div {
+            color: var(--text-primary) !important;
+        }
+
+        /* 13. Texte des tooltips */
+        [data-testid="stTooltipContent"] > div {
+            color: var(--text-primary) !important;
+        }
+
+        /* 14. Texte des notifications */
+        .toast {
+            color: var(--text-primary) !important;
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        /* 15. Texte des métriques delta */
+        [data-testid="stMetricDelta"] svg {
+            fill: var(--text-primary) !important;
+        }
+
+        /* 16. Override pour les couleurs spécifiques de Streamlit */
+        div[class*="st-"] {
+            color: var(--text-primary) !important;
+        }
+
+        /* 17. Assurer que tous les textes enfants héritent de la couleur */
+        .stApp *:not(button):not(input):not(textarea):not(select) {
+            color: inherit !important;
+        }
+
+        /* 18. Spécifique pour les tooltips des graphiques */
+        .svg-container text,
+        .plotly text,
+        .js-plotly-plot text {
+            fill: var(--text-primary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* 19. Légendes des graphiques */
+        .legendtext {
+            fill: var(--text-primary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* 20. Axes des graphiques */
+        .xtitle,
+        .ytitle,
+        .xaxislabel,
+        .yaxislabel {
+            fill: var(--text-primary) !important;
+            color: var(--text-primary) !important;
+        }
 </style>
 """, unsafe_allow_html=True)
 # ==================== CLASSES DE PRÉTRAITEMENT ====================
