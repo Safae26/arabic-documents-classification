@@ -28,69 +28,372 @@ except:
 
 # Configuration de la page
 st.set_page_config(
-    page_title="Classification de Documents Arabes - Linear SVC",
+    page_title="Classification de Documents Arabes",
     page_icon="🤖",
     layout="wide",
+    page_icon="🇸🇦",
     initial_sidebar_state="expanded"
 )
 
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.5rem;
-        color: #2E86AB;
-        text-align: center;
-        padding: 1rem;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 10px;
-        margin-bottom: 2rem;
+    /* ===== VARIABLES DE COULEUR ===== */
+    :root {
+        --primary: #2E86AB;
+        --primary-dark: #1A5D7A;
+        --primary-light: #4AA6D9;
+        --secondary: #FF8C00;
+        --secondary-dark: #CC7000;
+        --accent: #FFD166;
+        --dark-bg: #0F172A;
+        --darker-bg: #0A0F1C;
+        --card-bg: #1E293B;
+        --card-border: #334155;
+        --text-primary: #F1F5F9;
+        --text-secondary: #94A3B8;
+        --text-muted: #64748B;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --info: #3B82F6;
+        --gradient-primary: linear-gradient(135deg, #2E86AB 0%, #1A5D7A 100%);
+        --gradient-secondary: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+        --gradient-dark: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
     }
+    
+    /* ===== FOND PRINCIPAL ===== */
+    .stApp {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+    }
+    
+    /* ===== EN-TÊTE PRINCIPAL ===== */
+    .main-header {
+        font-size: 2.8rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .main-header::after {
+        content: 'تصنيف';
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        display: block;
+        margin-top: 0.5rem;
+        font-weight: 300;
+        letter-spacing: 2px;
+    }
+    
+    /* ===== SOUS-TITRES ===== */
     .sub-header {
         font-size: 1.8rem;
-        color: #4A90E2;
-        border-bottom: 2px solid #4A90E2;
-        padding-bottom: 0.5rem;
+        color: var(--primary-light);
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 0.8rem;
         margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        position: relative;
     }
+    
+    .sub-header::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 60px;
+        height: 2px;
+        background: var(--secondary);
+    }
+    
+    /* ===== CARTES ===== */
     .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--card-bg);
         padding: 1.5rem;
-        border-radius: 15px;
-        color: white;
+        border-radius: 12px;
+        border: 1px solid var(--card-border);
+        color: var(--text-primary);
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
-    .file-upload-box {
-        border: 2px dashed #4A90E2;
-        border-radius: 10px;
-        padding: 2rem;
-        text-align: center;
-        background-color: #f8f9fa;
-        margin: 1rem 0;
+    
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
     }
+    
+    .metric-card .metric-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--accent);
+        margin: 0.5rem 0;
+    }
+    
+    .metric-card .metric-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* ===== CARTE DE RÉSULTAT ===== */
     .result-card {
-        background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
-        padding: 1.5rem;
+        background: var(--gradient-dark);
+        padding: 2rem;
         border-radius: 15px;
-        color: white;
+        border: 1px solid var(--card-border);
+        color: var(--text-primary);
         text-align: center;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
     }
+    
+    .result-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-secondary);
+    }
+    
+    /* ===== ZONE DE TÉLÉCHARGEMENT ===== */
+    .file-upload-box {
+        border: 2px dashed var(--card-border);
+        border-radius: 12px;
+        padding: 2.5rem;
+        text-align: center;
+        background: rgba(30, 41, 59, 0.5);
+        margin: 1.5rem 0;
+        transition: all 0.3s ease;
+    }
+    
+    .file-upload-box:hover {
+        border-color: var(--primary);
+        background: rgba(30, 41, 59, 0.8);
+    }
+    
+    /* ===== TEXTE ARABE ===== */
     .arabic-text {
         direction: rtl;
         text-align: right;
-        font-size: 1.2em;
+        font-size: 1.3em;
         line-height: 1.8;
-        padding: 1rem;
-        background-color: #f8f9fa;
+        padding: 1.5rem;
+        background: var(--card-bg);
         border-radius: 10px;
-        border-right: 4px solid #4A90E2;
+        border-right: 4px solid var(--primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        box-shadow: var(--shadow);
+        margin: 1rem 0;
     }
+    
+    /* ===== HIGHLIGHT SVC ===== */
     .svc-highlight {
-        background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
-        color: white;
-        padding: 1rem;
+        background: var(--gradient-secondary);
+        color: var(--dark-bg);
+        padding: 1.2rem;
         border-radius: 10px;
         margin: 1rem 0;
+        font-weight: 600;
+        box-shadow: var(--shadow);
+    }
+    
+    /* ===== SIDEBAR ===== */
+    .css-1d391kg, .css-1lcbmhc {
+        background: var(--darker-bg);
+    }
+    
+    [data-testid="stSidebar"] {
+        background: var(--darker-bg);
+        border-right: 1px solid var(--card-border);
+    }
+    
+    [data-testid="stSidebar"] .sidebar-title {
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    [data-testid="stSidebar"] .sidebar-title::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: var(--gradient-secondary);
+        margin: 10px auto;
+        border-radius: 2px;
+    }
+    
+    /* ===== BOUTONS ===== */
+    .stButton > button {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        background: var(--primary-dark);
+    }
+    
+    /* ===== BOUTON PRIMAIRE ===== */
+    .stButton > button[kind="primary"] {
+        background: var(--gradient-secondary);
+        color: var(--dark-bg);
+        font-weight: 700;
+    }
+    
+    .stButton > button[kind="primary"]:hover {
+        background: var(--secondary-dark);
+    }
+    
+    /* ===== ONGLETS ===== */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: var(--card-bg);
+        border-radius: 8px 8px 0 0;
+        padding: 0.8rem 1.5rem;
+        border: 1px solid var(--card-border);
+        border-bottom: none;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+    
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background: var(--gradient-primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    
+    /* ===== WIDGETS ===== */
+    .stTextArea textarea, .stTextInput input {
+        background: var(--card-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 8px !important;
+    }
+    
+    .stSelectbox div[data-baseweb="select"] {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+    }
+    
+    /* ===== BARRE DE PROGRESSION ===== */
+    .stProgress > div > div > div {
+        background: var(--gradient-primary);
+    }
+    
+    /* ===== EXPANDER ===== */
+    .streamlit-expanderHeader {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .streamlit-expanderContent {
+        background: var(--darker-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0 0 8px 8px;
+        margin-top: -1px;
+    }
+    
+    /* ===== METRICS ===== */
+    .stMetric {
+        background: var(--card-bg);
+        padding: 1.2rem;
+        border-radius: 10px;
+        border: 1px solid var(--card-border);
+    }
+    
+    .stMetric label, .stMetric div {
+        color: var(--text-primary) !important;
+    }
+    
+    .stMetric [data-testid="stMetricValue"] {
+        color: var(--accent) !important;
+        font-size: 1.8rem !important;
+        font-weight: 700 !important;
+    }
+    
+    /* ===== ALERTES ===== */
+    .stAlert {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        color: var(--text-primary);
+    }
+    
+    /* ===== SPINNER ===== */
+    .stSpinner > div {
+        border-color: var(--primary) transparent transparent transparent;
+    }
+    
+    /* ===== FOOTER ===== */
+    .footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--card-border);
+        margin-top: 3rem;
+        background: var(--darker-bg);
+        border-radius: 10px;
+    }
+    
+    .footer-brand {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 0.5rem;
+        letter-spacing: 2px;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2rem;
+        }
+        
+        .sub-header {
+            font-size: 1.5rem;
+        }
+        
+        .metric-card .metric-value {
+            font-size: 1.8rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -287,18 +590,20 @@ def classify_with_svc(text, model, vectorizer):
     except Exception as e:
         st.error(f"❌ Erreur lors de la classification: {str(e)}")
         return None, None
-
+    
+st.markdown('<h1 class="main-header">SNI TASNEEF 🤖</h1>', unsafe_allow_html=True)
 # ==================== INTERFACE ====================
 # Sidebar pour la navigation
 with st.sidebar:
     # Logo et titre
-    st.markdown("## 🤖 CLASSIFICATEUR LINEAR SVC")
+    st.markdown('<div class="sidebar-title">SNI TASNEEF</div>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Navigation
     page = st.radio(
         "Navigation:",
-        ["Accueil", "Test en Temps Réel"]
+        ["Accueil", "Test en Temps Réel"],
+        label_visibility="collapsed"
     )
 
     # Charger les modèles
@@ -722,10 +1027,9 @@ elif page == "Test en Temps Réel":
 
 # Footer
 st.markdown("""
----
-<div style="text-align: center; color: #666; font-size: 0.9em;">
-<p>📚 **Système de Classification de Documents Arabes** - Linear Support Vector Classifier (SVC)</p>
-<p>Développé pour la classification automatique de documents journalistiques arabes</p>
-<p>© 2024 - Tous droits réservés</p>
+<div class="footer">
+    <div class="footer-brand">SNI TASNEEF</div>
+    <p><strong>Système de Classification Intelligente de Documents Arabes</strong></p>
+    <p>© 2025</p>
 </div>
 """, unsafe_allow_html=True)
