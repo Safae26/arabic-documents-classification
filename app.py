@@ -741,28 +741,30 @@ st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes</h1
 # ==================== PAGES ====================
 if page == "Accueil":
     
+    col1, col2 = st.columns([2, 1])
     
-    st.markdown("### 📋 À propos du Système")
-    st.markdown("""
-    **Système de classification automatique de documents journalistiques arabes**
+    with col1:
+        st.markdown("### 📋 À propos du Système")
+        st.markdown("""
+        **Système de classification automatique de documents journalistiques arabes**
         
-    **7 catégories de classification:**
-    1. **Culture** - Arts, littérature, traditions
-    2. **Finance** - Économie, marchés, affaires
-    3. **Medical** - Santé, médecine, recherche
-    4. **Politics** - Politique, gouvernements, relations internationales
-    5. **Religion** - Croyances, pratiques religieuses
-    6. **Sports** - Événements sportifs, athlètes
-    7. **Tech** - Technologie, innovation, science
-    """)
+        **7 catégories de classification:**
+        1. **Culture** - Arts, littérature, traditions
+        2. **Finance** - Économie, marchés, affaires
+        3. **Medical** - Santé, médecine, recherche
+        4. **Politics** - Politique, gouvernements, relations internationales
+        5. **Religion** - Croyances, pratiques religieuses
+        6. **Sports** - Événements sportifs, athlètes
+        7. **Tech** - Technologie, innovation, science
+        """)
         
-    st.markdown("""
-    **💡 Comment utiliser:**
-    1. Naviguez vers "Test en Temps Réel"
-    2. Entrez ou téléchargez un texte arabe
-    3. Cliquez sur "Lancer la Classification"
-    4. Visualisez les résultats détaillés
-    """)
+        st.markdown("""
+        **💡 Comment utiliser:**
+        1. Naviguez vers "Test en Temps Réel"
+        2. Entrez ou téléchargez un texte arabe
+        3. Cliquez sur "Lancer la Classification"
+        4. Visualisez les résultats détaillés
+        """)
 
 # Page de test en temps réel
 elif page == "Test en Temps Réel":
