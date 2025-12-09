@@ -1381,7 +1381,10 @@ elif page == "Test en Temps Réel":
                         if len(sorted_scores) > 1:
                             margin = sorted_scores[0][1] - sorted_scores[1][1]
                         
+                        # Information technique
                         st.markdown('<div class="svc-highlight">', unsafe_allow_html=True)
+                        if hasattr(st.session_state.svc_model, 'coef_'):
+                            st.write(f"**🔢 Features:** {st.session_state.svc_model.coef_.shape[1]}")
                         st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Section de détails techniques
