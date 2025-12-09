@@ -1267,19 +1267,7 @@ elif page == "Test en Temps Réel":
             with st.spinner("Analyse en cours avec Linear SVC..."):
                 # Créer une barre de progression
                 progress_bar = st.progress(0)
-                
-                # Étape 1: Prétraitement
-                st.write("🔧 **Étape 1:** Prétraitement du texte...")
-                progress_bar.progress(25)
-                
-                # Étape 2: Vectorisation TF-IDF
-                st.write("📊 **Étape 2:** Vectorisation TF-IDF...")
-                progress_bar.progress(50)
-                
-                # Étape 3: Classification avec Linear SVC
-                st.write("🎯 **Étape 3:** Classification avec Linear SVC...")
-                progress_bar.progress(75)
-                
+
                 # Classification avec le modèle
                 results, predicted_category = classify_with_svc(
                     text_input, 
