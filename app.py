@@ -773,14 +773,6 @@ if page == "Accueil":
         st.markdown("""
         **Système de classification automatique de documents journalistiques arabes**
         
-        **🎯 Modèle utilisé: Linear Support Vector Classifier (SVC)**
-        
-        **Caractéristiques techniques:**
-        - ⚡ **Algorithme:** Linear SVC (Support Vector Machine linéaire)
-        - 🔧 **Prétraitement:** Normalisation arabe avancée
-        - 📊 **Vectorisation:** TF-IDF (Term Frequency-Inverse Document Frequency)
-        - 🎯 **Précision:** Modèle optimisé pour la classification multiclasse
-        
         **7 catégories de classification:**
         1. **Culture** - Arts, littérature, traditions
         2. **Finance** - Économie, marchés, affaires
@@ -789,15 +781,8 @@ if page == "Accueil":
         5. **Religion** - Croyances, pratiques religieuses
         6. **Sports** - Événements sportifs, athlètes
         7. **Tech** - Technologie, innovation, science
-        
-        **Statut du système:**
+
         """)
-        
-        # Afficher l'état du système
-        if st.session_state.get('svc_model_loaded', False):
-            st.success("✅ **Système opérationnel** - Prêt à classifier")
-        else:
-            st.error("❌ **Système non disponible**")
         
         st.markdown("""
         **💡 Comment utiliser:**
