@@ -829,8 +829,6 @@ elif page == "Test en Temps Réel":
         """)
         st.stop()
     
-    st.success("Entrez un texte arabe pour classification")
-    
     # Onglets pour différentes méthodes d'entrée
     tab1, tab2 = st.tabs(["📝 Saisie Manuelle", "📁 Téléchargement de Fichier"])
     
