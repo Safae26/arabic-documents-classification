@@ -1,4 +1,4 @@
-# 🤖 Classification de Documents Arabes - Linear SVC
+# 🤖 Classification de Documents Arabes
 
 Application web de classification automatique de documents journalistiques arabes utilisant Linear Support Vector Classifier.
 
