@@ -1380,13 +1380,8 @@ elif page == "Test en Temps Réel":
                         sorted_scores = sorted(results.items(), key=lambda x: x[1], reverse=True)
                         if len(sorted_scores) > 1:
                             margin = sorted_scores[0][1] - sorted_scores[1][1]
-                            st.metric("📈 Marge", f"{margin*100:.1f}%")
                         
-                        # Information technique
                         st.markdown('<div class="svc-highlight">', unsafe_allow_html=True)
-                        st.write("**⚙️ Modèle utilisé:** Linear Support Vector Classifier (SVC)")
-                        if hasattr(st.session_state.svc_model, 'coef_'):
-                            st.write(f"**🔢 Features:** {st.session_state.svc_model.coef_.shape[1]}")
                         st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Section de détails techniques
