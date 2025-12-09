@@ -807,38 +807,6 @@ if page == "Accueil":
         3. Cliquez sur "Lancer la Classification"
         4. Visualisez les résultats détaillés
         """)
-    
-    with col2:
-        st.markdown("#### 📊 Informations Techniques")
-        
-        if st.session_state.get('svc_model_loaded', False):
-            info_cards = []
-            
-            # Informations sur le modèle
-            if hasattr(st.session_state.svc_model, 'classes_'):
-                info_cards.append(("🎯", "Catégories", str(len(st.session_state.svc_model.classes_))))
-            
-            if hasattr(st.session_state.svc_vectorizer, 'vocabulary_'):
-                info_cards.append(("📚", "Mots uniques", str(len(st.session_state.svc_vectorizer.vocabulary_))))
-            
-            if hasattr(st.session_state.svc_model, 'coef_'):
-                info_cards.append(("🔢", "Features", str(st.session_state.svc_model.coef_.shape[1])))
-            
-            info_cards.append(("⚡", "Algorithme", "Linear SVC"))
-            info_cards.append(("🔤", "Langue", "Arabe"))
-            info_cards.append(("🔄", "Prétraitement", "Complet"))
-            
-            for emoji, label, value in info_cards:
-                st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
-                            padding: 1rem; border-radius: 10px; margin: 0.5rem 0; text-align: center;">
-                    <div style="font-size: 2rem;">{emoji}</div>
-                    <div><strong>{label}</strong></div>
-                    <div style="font-size: 1.5rem; font-weight: bold;">{value}</div>
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            st.info("ℹ️ Modèle non chargé. Veuillez vérifier le chemin du fichier.")
 
 # Page de test en temps réel
 elif page == "Test en Temps Réel":
