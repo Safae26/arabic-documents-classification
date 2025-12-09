@@ -651,16 +651,7 @@ def load_svc_model():
             else:
                 st.error("❌ Vectorizer TF-IDF introuvable")
                 return None
-        
-        st.success(f"✅ Modèle LinearSVC chargé avec succès")
-        
-        # Afficher les informations du modèle
-        if hasattr(model, 'classes_'):
-            st.info(f"📊 Catégories: {len(model.classes_)}")
-        
-        if hasattr(model, 'coef_'):
-            st.info(f"🔢 Nombre de features: {model.coef_.shape[1]}")
-        
+    
         return model, vectorizer
         
     except Exception as e:
