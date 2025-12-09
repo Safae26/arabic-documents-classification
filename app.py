@@ -752,14 +752,13 @@ with st.sidebar:
     
     # Afficher l'état du chargement
     if st.session_state.get('svc_model_loaded', False):
-        st.success("✅ Système prêt")
         
         # Informations sur le modèle
         if st.session_state.svc_model and hasattr(st.session_state.svc_model, 'classes_'):
-            st.info(f"🎯 {len(st.session_state.svc_model.classes_)} catégories")
+            pass
         
         if st.session_state.svc_vectorizer and hasattr(st.session_state.svc_vectorizer, 'vocabulary_'):
-            st.info(f"📚 {len(st.session_state.svc_vectorizer.vocabulary_)} mots")
+            pass
 
 # Header principal
 st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes</h1>', unsafe_allow_html=True)
