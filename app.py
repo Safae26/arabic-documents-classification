@@ -1126,11 +1126,9 @@ with st.sidebar:
 
 # Header principal
 st.markdown("""
-<div class="header-container">
-    <div class="floating-text">🤖 Classification de Documents Arabes</div>
-    <div class="main-header-container">
-        <!-- Le reste du contenu de la page ira ici -->
-    </div>
+<div class="text-projection">
+    <div class="front-layer">🤖 Classification de Documents Arabes</div>
+    <div class="back-layer">🤖 Classification de Documents Arabes</div>
 </div>
 """, unsafe_allow_html=True)
 
