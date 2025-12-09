@@ -1406,21 +1406,6 @@ elif page == "Test en Temps Réel":
                         col1, col2 = st.columns(2)
                         
                         with col1:
-                            st.markdown("**📊 Statistiques du Texte:**")
-                            
-                            # Calculer les statistiques
-                            original_words = text_input.split()
-                            cleaned_text = arabic_preprocessing(text_input)
-                            cleaned_words = cleaned_text.split()
-                            
-                            stats = {
-                                "Mots originaux": len(original_words),
-                                "Caractères originaux": len(text_input),
-                                "Mots après prétraitement": len(cleaned_words),
-                                "Mots uniques": len(set(cleaned_words)),
-                                "Taux de réduction": f"{(len(original_words) - len(cleaned_words))/max(len(original_words), 1)*100:.1f}%"
-                            }
-                            
                             for stat, value in stats.items():
                                 st.write(f"• **{stat}:** {value}")
                             
@@ -1450,16 +1435,10 @@ elif page == "Test en Temps Réel":
                             else:
                                 st.write("• 🔴 **Confiance faible** (inférieure à 50%)")
                             
-                            st.markdown("**⚙️ Configuration Linear SVC:**")
-                            st.write("• **Algorithme:** Support Vector Machine linéaire")
-                            st.write("• **Kernel:** Linéaire (pas de transformation kernel)")
-                            st.write("• **Perte:** Hinge loss")
-                            st.write("• **Régularisation:** L2")
-                            
                             # Informations sur le modèle entraîné
                             if hasattr(st.session_state.svc_model, 'n_iter_'):
                                 st.write(f"• **Itérations:** {st.session_state.svc_model.n_iter_}")
-                
+            
                 else:
                     st.error("❌ **Échec de la classification**")
                     st.info("""
