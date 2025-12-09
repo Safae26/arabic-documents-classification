@@ -1406,9 +1406,13 @@ elif page == "Test en Temps Réel":
                         col1, col2 = st.columns(2)
                         
                         with col1:
-                            for stat, value in stats.items():
-                                st.write(f"• **{stat}:** {value}")
+                            st.markdown("**📊 Statistiques du Texte:**")
                             
+                            # Calculer les statistiques
+                            original_words = text_input.split()
+                            cleaned_text = arabic_preprocessing(text_input)
+                            cleaned_words = cleaned_text.split()
+
                             st.markdown("**🔧 Étapes de Prétraitement:**")
                             st.write("1. Normalisation des caractères arabes")
                             st.write("2. Suppression des diacritiques (tashkeel)")
