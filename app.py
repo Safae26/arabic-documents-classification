@@ -1384,7 +1384,8 @@ elif page == "Test en Temps Réel":
                         # Information technique
                         st.markdown('<div class="svc-highlight">', unsafe_allow_html=True)
                         if hasattr(st.session_state.svc_model, 'coef_'):
-                            st.write(f"**🔢 Features:** {st.session_state.svc_model.coef_.shape[1]}")
+                            pass
+                            #st.write(f"**🔢 Features:** {st.session_state.svc_model.coef_.shape[1]}")
                         st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Section de détails techniques
@@ -1427,7 +1428,8 @@ elif page == "Test en Temps Réel":
                             
                             # Informations sur le modèle entraîné
                             if hasattr(st.session_state.svc_model, 'n_iter_'):
-                                st.write(f"• **Itérations:** {st.session_state.svc_model.n_iter_}")
+                                #st.write(f"• **Itérations:** {st.session_state.svc_model.n_iter_}")
+                                pass
             
                 else:
                     st.error("❌ **Échec de la classification**")
