@@ -735,6 +735,32 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
+    # Charger les modèles
+    if 'svc_model_loaded' not in st.session_state:
+        with st.spinner("Chargement du modèle LinearSVC..."):
+            model, vectorizer = load_svc_model()
+            if model and vectorizer:
+                st.session_state.svc_model = model
+                st.session_state.svc_vectorizer = vectorizer
+                st.session_state.svc_model_loaded = True
+                st.success("✅ Modèle chargé")
+            else:
+                st.error("❌ Échec du chargement")
+                st.session_state.svc_model = None
+                st.session_state.svc_vectorizer = None
+                st.session_state.svc_model_loaded = False
+    
+    # Afficher l'état du chargement
+    if st.session_state.get('svc_model_loaded', False):
+        st.success("✅ Système prêt")
+        
+        # Informations sur le modèle
+        if st.session_state.svc_model and hasattr(st.session_state.svc_model, 'classes_'):
+            st.info(f"🎯 {len(st.session_state.svc_model.classes_)} catégories")
+        
+        if st.session_state.svc_vectorizer and hasattr(st.session_state.svc_vectorizer, 'vocabulary_'):
+            st.info(f"📚 {len(st.session_state.svc_vectorizer.vocabulary_)} mots")
+
 # Header principal
 st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes</h1>', unsafe_allow_html=True)
 
