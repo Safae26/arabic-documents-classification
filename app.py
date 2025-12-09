@@ -240,6 +240,159 @@ st.markdown("""
         position: relative;
         animation: pulseGlow 2s ease-in-out infinite;
     }
+            
+    /* ===== HEADER FLOTTANT SUPERPOSÉ ===== */
+    .header-container {
+        position: relative;
+        width: 100%;
+        margin-bottom: 5rem;
+    }
+
+    .floating-text {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Orbitron', monospace !important;
+        font-weight: 900;
+        font-size: 3.2rem;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 
+            0 0 30px rgba(0, 243, 255, 0.5),
+            0 0 60px rgba(0, 243, 255, 0.3);
+        z-index: 100;
+        text-align: center;
+        white-space: nowrap;
+        padding: 0.8rem 2.5rem;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 243, 255, 0.3);
+        clip-path: polygon(0% 0%, 95% 0%, 100% 25%, 100% 75%, 95% 100%, 5% 100%, 0% 75%, 0% 25%);
+        animation: floatGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes floatGlow {
+        0%, 100% { 
+            transform: translateX(-50%) translateY(0);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+        }
+        50% { 
+            transform: translateX(-50%) translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 243, 255, 0.4);
+        }
+    }
+
+    .floating-text::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--gradient-main);
+        z-index: -1;
+        filter: blur(15px);
+        opacity: 0.3;
+        clip-path: inherit;
+    }
+
+    /* ===== VERSION ALTERNATIVE : TEXTE DÉCALÉ ===== */
+    .floating-text-alt {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 3rem;
+    }
+
+    .floating-text-alt::before {
+        content: '🤖 Classification de Documents Arabes';
+        position: absolute;
+        top: -15px;
+        left: -20px;
+        font-family: 'Orbitron', monospace;
+        font-weight: 900;
+        font-size: 3.5rem;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        z-index: 10;
+        opacity: 0.9;
+    }
+
+    .floating-text-alt::after {
+        content: '🤖 Classification de Documents Arabes';
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        font-family: 'Orbitron', monospace;
+        font-weight: 900;
+        font-size: 3.5rem;
+        color: rgba(0, 243, 255, 0.2);
+        z-index: 5;
+    }
+
+    /* ===== VERSION 3 : TEXTE AVEC EFFET DE PROJECTION ===== */
+    .text-projection {
+        position: relative;
+        font-family: 'Orbitron', monospace;
+        font-weight: 900;
+        font-size: 3.5rem;
+        text-align: center;
+        margin-bottom: 4rem;
+        perspective: 1000px;
+    }
+
+    .text-projection .front-layer {
+        position: relative;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transform: translateZ(50px);
+        z-index: 2;
+        animation: textTilt 6s ease-in-out infinite;
+    }
+
+    .text-projection .back-layer {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: blur(10px);
+        opacity: 0.5;
+        transform: translateZ(0);
+        z-index: 1;
+    }
+
+    @keyframes textTilt {
+        0%, 100% { transform: translateZ(50px) rotateX(0deg); }
+        25% { transform: translateZ(50px) rotateX(5deg) rotateY(5deg); }
+        75% { transform: translateZ(50px) rotateX(-5deg) rotateY(-5deg); }
+    }
+
+    /* ===== MODIFICATION DU MAIN-HEADER EXISTANT ===== */
+    .main-header {
+        /* Réduisez le padding-top pour compenser le texte flottant */
+        padding-top: 2rem !important;
+        margin-top: 4rem !important;
+    }
+
+    .main-header::before {
+        /* Ajustez le contenu pour ne pas interférer avec le texte flottant */
+        content: 'SYSTEM';
+        font-size: 0.9rem;
+        letter-spacing: 4px;
+        color: var(--primary-cyan);
+        display: block;
+        margin-bottom: 0.5rem;
+        animation: pulseGlow 2s ease-in-out infinite;
+    }
     
     /* ===== LAYOUT INNOVANT - GRID ORGANIQUE ===== */
     .cyber-grid {
@@ -972,7 +1125,14 @@ with st.sidebar:
             pass
 
 # Header principal
-st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes</h1>', unsafe_allow_html=True)
+st.markdown("""
+<div class="header-container">
+    <div class="floating-text">🤖 Classification de Documents Arabes</div>
+    <div class="main-header-container">
+        <!-- Le reste du contenu de la page ira ici -->
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ==================== PAGES ====================
 if page == "Accueil":
