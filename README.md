@@ -33,5 +33,5 @@ pip install -r requirements.txt
 # Télécharger les ressources NLTK
 python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt')"
 ```
-
+### Streamlit Cloud Deployment
 ### Référence : https://www.researchgate.net/publication/359704038_An_Effective_Approach_for_Arabic_Document_Classification_Using_Machine_Learning
