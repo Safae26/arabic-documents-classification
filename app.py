@@ -1191,7 +1191,7 @@ elif page == "Test en Temps Réel":
         # Options pour l'entrée
         input_option = st.radio(
             "Méthode d'entrée:",
-            ["📝 Écrire/Coller", "🔍 Utiliser un exemple"]
+            ["Écrire/Coller", "Utiliser un exemple"]
         )
         
         if input_option == "📝 Écrire/Coller":
