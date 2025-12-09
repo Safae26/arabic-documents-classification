@@ -1,0 +1,11 @@
+ipykernel
+seaborn
+wordcloud 
+nltk
+streamlit>=1.28.0
+joblib>=1.3.2
+numpy>=1.24.3
+pandas>=2.0.3
+plotly>=5.17.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.2
