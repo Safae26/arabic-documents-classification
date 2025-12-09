@@ -1107,9 +1107,9 @@ with st.sidebar:
                 st.session_state.svc_model = model
                 st.session_state.svc_vectorizer = vectorizer
                 st.session_state.svc_model_loaded = True
-                st.success("✅ Modèle chargé")
+                #st.success("✅ Modèle chargé")
             else:
-                st.error("❌ Échec du chargement")
+                #st.error("❌ Échec du chargement")
                 st.session_state.svc_model = None
                 st.session_state.svc_vectorizer = None
                 st.session_state.svc_model_loaded = False
