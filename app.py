@@ -36,111 +36,183 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* ===== VARIABLES DE COULEUR - THÈME FUTURISTE BLEU CYBER ===== */
+    /* ===== IMPORT DE POLICES FUTURISTES ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;800&family=Rajdhani:wght@300;500;700&display=swap');
+    
+    /* ===== VARIABLES DE COULEUR - THÈME CYBERPUNK ===== */
     :root {
-        --primary: #0EA5E9;
-        --primary-dark: #0369A1;
-        --primary-light: #38BDF8;
-        --primary-50: #F0F9FF;
-        --primary-100: #E0F2FE;
-        --primary-200: #BAE6FD;
-        --primary-300: #7DD3FC;
-        --primary-400: #38BDF8;
-        --primary-500: #0EA5E9;
-        --primary-600: #0284C7;
-        --primary-700: #0369A1;
-        --primary-800: #075985;
-        --primary-900: #0C4A6E;
+        --primary-cyan: #00f3ff;
+        --primary-blue: #0066ff;
+        --primary-purple: #9d00ff;
+        --neon-pink: #ff00ff;
+        --neon-green: #00ff9d;
         
-        --cyber-blue: #00D4FF;
-        --cyber-purple: #8B5CF6;
-        --cyber-pink: #EC4899;
-        --neon-blue: #00F7FF;
+        --bg-space: #0a0a14;
+        --bg-deep: #050510;
+        --bg-card: rgba(16, 16, 32, 0.7);
+        --bg-glass: rgba(255, 255, 255, 0.05);
         
-        --dark-bg: #0F172A;
-        --darker-bg: #020617;
-        --card-bg: rgba(30, 41, 59, 0.7);
-        --card-bg-light: rgba(51, 65, 85, 0.8);
-        --card-border: rgba(71, 85, 105, 0.3);
-        --card-border-light: rgba(100, 116, 139, 0.5);
+        --text-primary: #ffffff;
+        --text-glow: #e6f7ff;
+        --text-cyan: #a0f0ff;
+        --text-purple: #d0a0ff;
         
-        --text-primary: #FFFFFF;
-        --text-secondary: #E2E8F0;
-        --text-muted: #94A3B8;
-        --text-glow: rgba(255, 255, 255, 0.9);
+        --gradient-main: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-blue) 50%, var(--primary-purple) 100%);
+        --gradient-neon: linear-gradient(90deg, var(--neon-pink), var(--primary-cyan));
+        --gradient-space: radial-gradient(circle at 30% 20%, rgba(0, 102, 255, 0.15) 0%, transparent 50%),
+                         radial-gradient(circle at 70% 80%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
         
-        --gradient-blue: linear-gradient(135deg, var(--primary-500) 0%, var(--cyber-blue) 100%);
-        --gradient-cyber: linear-gradient(135deg, var(--cyber-blue) 0%, var(--cyber-purple) 50%, var(--cyber-pink) 100%);
-        --gradient-dark: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
-        --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        --border-glow: 0 0 15px var(--primary-cyan);
+        --shadow-hologram: 0 0 30px rgba(0, 243, 255, 0.3);
+        --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.6);
         
-        --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
-        --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.5);
-        --shadow-neon: 0 0 20px rgba(14, 165, 233, 0.3);
-        
-        --border-radius: 16px;
-        --border-radius-lg: 24px;
-        --border-radius-sm: 12px;
+        --shape-blob: polygon(0% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%);
+        --shape-cyber: polygon(0% 0%, 90% 0%, 100% 10%, 100% 100%, 10% 100%, 0% 90%);
+        --shape-hexagon: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        --shape-wave: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%);
     }
     
-    /* ===== ANIMATIONS ===== */
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    /* ===== ANIMATIONS AVANCÉES ===== */
+    @keyframes hologramFloat {
+        0%, 100% { 
+            transform: translateY(0) rotate(0deg); 
+            filter: drop-shadow(0 5px 15px rgba(0, 243, 255, 0.3));
+        }
+        25% { 
+            transform: translateY(-10px) rotate(0.5deg); 
+            filter: drop-shadow(0 10px 25px rgba(157, 0, 255, 0.4));
+        }
+        50% { 
+            transform: translateY(-5px) rotate(-0.5deg);
+            filter: drop-shadow(0 15px 30px rgba(0, 102, 255, 0.5));
+        }
+        75% { 
+            transform: translateY(-8px) rotate(0.3deg);
+        }
     }
     
-    @keyframes glow {
-        0%, 100% { box-shadow: var(--shadow-neon); }
-        50% { box-shadow: 0 0 30px rgba(14, 165, 233, 0.5); }
+    @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
     }
     
-    @keyframes shimmer {
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    
+    @keyframes textShimmer {
         0% { background-position: -200% center; }
         100% { background-position: 200% center; }
     }
     
-    @keyframes slideIn {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+    @keyframes morphShape {
+        0%, 100% { clip-path: var(--shape-blob); }
+        33% { clip-path: var(--shape-cyber); }
+        66% { clip-path: var(--shape-hexagon); }
     }
     
-    /* ===== FOND GÉNÉRAL AVEC EFFET DE PARTICULES ===== */
+    /* ===== FOND SPATIAL AVANCÉ ===== */
     .stApp {
-        background: var(--darker-bg);
+        background: var(--bg-space);
         background-image: 
-            radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 20%),
-            radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%),
-            radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 30%);
+            var(--gradient-space),
+            linear-gradient(45deg, transparent 95%, rgba(0, 243, 255, 0.1) 100%),
+            linear-gradient(135deg, transparent 95%, rgba(157, 0, 255, 0.1) 100%);
+        font-family: 'Exo 2', sans-serif;
         color: var(--text-primary);
-        animation: slideIn 0.6s ease-out;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
     }
     
-    /* ===== TOUS LES TEXTES ===== */
-    * {
-        color: var(--text-primary) !important;
-        font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+    /* ===== SCANLINE EFFET ===== */
+    .stApp::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            var(--primary-cyan) 50%, 
+            transparent 100%);
+        z-index: 1000;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
     }
     
-    /* ===== EN-TÊTE PRINCIPAL CYBER ===== */
-    .main-header {
-        font-size: 3.5rem;
+    /* ===== TYPOGRAPHIE FUTURISTE ===== */
+    h1, .main-header {
+        font-family: 'Orbitron', monospace !important;
         font-weight: 900;
-        background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-300) 100%);
+        font-size: 4.5rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        background: var(--gradient-main);
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
         background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        margin-bottom: 2rem;
+        position: relative;
+        line-height: 1.1;
+        animation: hologramFloat 8s ease-in-out infinite;
+    }
+    
+    h2, .sub-header {
+        font-family: 'Rajdhani', sans-serif !important;
+        font-weight: 700;
+        font-size: 2.8rem;
+        letter-spacing: 2px;
+        color: var(--text-cyan);
+        position: relative;
+        padding-left: 2rem;
+        margin: 3rem 0 2rem;
+        border-left: 4px solid var(--primary-cyan);
+        text-transform: uppercase;
+        background: linear-gradient(90deg, var(--text-cyan), var(--text-primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    h3 {
+        font-family: 'Exo 2', sans-serif !important;
+        font-weight: 600;
+        font-size: 2rem;
+        color: var(--text-primary);
+        position: relative;
+        margin: 2rem 0 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px dashed rgba(0, 243, 255, 0.3);
+    }
+    
+    p, .stMarkdown, .stText {
+        font-family: 'Exo 2', sans-serif !important;
+        font-weight: 300;
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: var(--text-glow) !important;
+        letter-spacing: 0.3px;
+        margin-bottom: 1.5rem;
+        max-width: 800px;
+    }
+    
+    /* ===== EN-TÊTE PRINCIPAL HOLOGRAM ===== */
+    .main-header {
         text-align: center;
-        padding: 3rem;
-        margin-bottom: 3rem;
-        background: rgba(30, 41, 59, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--card-border);
-        border-radius: var(--border-radius-lg);
+        padding: 4rem 3rem;
+        margin: 3rem auto;
+        background: rgba(16, 16, 32, 0.6);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(0, 243, 255, 0.2);
+        clip-path: polygon(0% 0%, 95% 0%, 100% 10%, 100% 90%, 95% 100%, 5% 100%, 0% 90%, 0% 10%);
         position: relative;
         overflow: hidden;
-        animation: float 6s ease-in-out infinite;
+        max-width: 1200px;
+        animation: morphShape 15s ease-in-out infinite, hologramFloat 8s ease-in-out infinite;
     }
     
     .main-header::before {
@@ -150,71 +222,69 @@ st.markdown("""
         left: -2px;
         right: -2px;
         bottom: -2px;
-        background: var(--gradient-cyber);
+        background: var(--gradient-main);
         z-index: -1;
-        border-radius: var(--border-radius-lg);
+        filter: blur(20px);
         opacity: 0.3;
+        clip-path: inherit;
     }
     
     .main-header::after {
-        content: '🤖 SNI TASNEEF';
-        font-size: 1.2rem;
-        color: var(--cyber-blue);
+        content: '𝐒𝐘𝐒𝐓𝐄𝐌';
+        font-family: 'Orbitron', monospace;
+        font-size: 1rem;
+        letter-spacing: 5px;
+        color: var(--primary-cyan);
         display: block;
-        margin-top: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    /* ===== SOUS-TITRES HOLOGRAFIQUES ===== */
-    .sub-header {
-        font-size: 2.2rem;
-        background: linear-gradient(90deg, var(--primary-400), var(--cyber-blue));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        border-bottom: 2px solid;
-        border-image: linear-gradient(90deg, var(--primary-500), transparent) 1;
-        padding-bottom: 1.2rem;
-        margin-top: 3rem;
-        margin-bottom: 2rem;
-        font-weight: 800;
+        margin-top: 1rem;
         position: relative;
-        padding-left: 0;
-        text-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+        animation: pulseGlow 2s ease-in-out infinite;
     }
     
-    .sub-header::after {
+    /* ===== LAYOUT INNOVANT - GRID ORGANIQUE ===== */
+    .cyber-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+        position: relative;
+    }
+    
+    .cyber-grid::before {
         content: '';
         position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100px;
-        height: 4px;
-        background: var(--gradient-blue);
-        border-radius: 2px;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: 
+            linear-gradient(90deg, transparent 95%, rgba(0, 243, 255, 0.1) 100%),
+            linear-gradient(180deg, transparent 95%, rgba(157, 0, 255, 0.1) 100%);
+        z-index: -1;
+        border-radius: 20px;
     }
     
-    /* ===== CARTES MÉTRIQUES GLASSMORPHISM ===== */
+    /* ===== CARTES MORPHING ===== */
     .metric-card {
-        background: rgba(30, 41, 59, 0.4);
-        backdrop-filter: blur(10px);
-        padding: 2rem;
-        border-radius: var(--border-radius);
-        border: 1px solid var(--card-border);
-        text-align: center;
-        box-shadow: var(--shadow);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        min-height: 150px;
+        background: rgba(16, 16, 32, 0.8);
+        backdrop-filter: blur(15px);
+        padding: 2.5rem;
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        clip-path: polygon(0% 0%, 92% 0%, 100% 8%, 100% 100%, 8% 100%, 0% 92%);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+        min-height: 180px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        position: relative;
-        overflow: hidden;
-        animation: glow 3s ease-in-out infinite;
+    }
+    
+    .metric-card:hover {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 92% 100%, 0% 100%);
+        transform: translateY(-10px) scale(1.03);
+        border-color: var(--primary-cyan);
+        box-shadow: var(--shadow-hologram), 0 20px 40px rgba(0, 0, 0, 0.4);
     }
     
     .metric-card::before {
@@ -224,186 +294,113 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        transition: 0.5s;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: var(--shadow-xl), 0 0 40px rgba(14, 165, 233, 0.4);
-        border-color: var(--primary-500);
-        background: rgba(30, 41, 59, 0.6);
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 243, 255, 0.1), 
+            transparent);
+        transition: 0.6s;
     }
     
     .metric-card:hover::before {
         left: 100%;
     }
     
-    .metric-card .metric-value {
-        font-size: 3rem;
-        font-weight: 900;
-        background: var(--gradient-blue);
+    .metric-value {
+        font-family: 'Orbitron', monospace !important;
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: var(--gradient-main);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0.5rem 0;
-        position: relative;
-        z-index: 1;
+        line-height: 1;
+        text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
     }
     
-    .metric-card .metric-label {
+    .metric-label {
+        font-family: 'Rajdhani', sans-serif !important;
         font-size: 0.9rem;
-        color: var(--text-secondary) !important;
+        letter-spacing: 3px;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 600;
-        opacity: 0.9;
+        color: var(--text-cyan) !important;
+        margin-top: 0.5rem;
+        font-weight: 500;
     }
     
-    /* ===== CARTE DE RÉSULTAT CYBER ===== */
-    .result-card {
-        background: rgba(14, 165, 233, 0.1);
-        backdrop-filter: blur(15px);
+    /* ===== ZONES DE TEXTE ORGANIQUES ===== */
+    .text-flow {
+        background: rgba(16, 16, 32, 0.6);
+        backdrop-filter: blur(10px);
         padding: 3rem;
-        border-radius: var(--border-radius-lg);
-        border: 2px solid rgba(14, 165, 233, 0.3);
-        text-align: center;
-        box-shadow: var(--shadow-lg), inset 0 0 50px rgba(14, 165, 233, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .result-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--gradient-cyber);
-        opacity: 0.1;
-        z-index: -1;
-    }
-    
-    .result-card::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-            transparent,
-            var(--cyber-blue),
-            transparent 30%
-        );
-        animation: rotate 4s linear infinite;
-    }
-    
-    /* ===== ZONE DE TÉLÉCHARGEMENT CYBER ===== */
-    .file-upload-box {
-        border: 2px dashed;
-        border-image: linear-gradient(135deg, var(--primary-500), var(--cyber-blue)) 1;
-        border-radius: var(--border-radius);
-        padding: 4rem 2rem;
-        text-align: center;
-        background: rgba(14, 165, 233, 0.05);
-        backdrop-filter: blur(5px);
         margin: 2.5rem 0;
-        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 243, 255, 0.1);
+        clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 90% 100%, 0% 100%);
+        position: relative;
+        transition: all 0.4s ease;
     }
     
-    .file-upload-box:hover {
-        background: rgba(14, 165, 233, 0.1);
-        box-shadow: var(--shadow-lg), 0 0 30px rgba(14, 165, 233, 0.2);
-        transform: scale(1.01);
+    .text-flow:hover {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%);
+        border-color: rgba(0, 243, 255, 0.3);
+        transform: translateY(-5px);
     }
     
-    .file-upload-box h3 {
-        background: var(--gradient-blue);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
+    .text-flow::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-main);
+        clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
     }
     
     /* ===== TEXTE ARABE FUTURISTE ===== */
     .arabic-text {
         direction: rtl;
-        text-align: right;
-        font-size: 1.5em;
-        line-height: 2;
-        padding: 2.5rem;
-        background: rgba(30, 41, 59, 0.5);
-        backdrop-filter: blur(10px);
-        border-radius: var(--border-radius);
-        border-right: 4px solid var(--primary-500);
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        box-shadow: var(--shadow);
-        margin: 2rem 0;
+        text-align: justify;
+        font-family: 'Exo 2', 'Segoe UI', sans-serif;
+        font-size: 1.6rem;
+        line-height: 2.2;
+        padding: 3rem;
+        margin: 2.5rem 0;
+        background: rgba(16, 16, 32, 0.7);
+        backdrop-filter: blur(15px);
+        border: 2px solid;
+        border-image: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple)) 1;
+        clip-path: polygon(0% 0%, 98% 0%, 100% 5%, 100% 95%, 98% 100%, 2% 100%, 0% 95%, 0% 5%);
         position: relative;
-        overflow: hidden;
+        color: var(--text-primary) !important;
     }
     
     .arabic-text::before {
-        content: '';
+        content: '𐍈';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--gradient-blue);
-    }
-    
-    /* ===== SIDEBAR CYBER ===== */
-    [data-testid="stSidebar"] {
-        background: rgba(2, 6, 23, 0.8) !important;
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(14, 165, 233, 0.2);
-    }
-    
-    [data-testid="stSidebar"] > div:first-child {
-        background: rgba(14, 165, 233, 0.1);
-        padding: 2.5rem 1.5rem;
-        border-bottom: 1px solid rgba(14, 165, 233, 0.2);
-    }
-    
-    .sidebar-title {
+        top: -20px;
+        right: 20px;
         font-size: 2rem;
-        font-weight: 900;
-        text-align: center;
-        position: relative;
-        padding-bottom: 1.5rem;
-        background: var(--gradient-cyber);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 2.5rem;
+        color: var(--primary-cyan);
+        font-family: 'Orbitron', monospace;
     }
     
-    .sidebar-title::after {
-        content: '';
-        display: block;
-        width: 80px;
-        height: 4px;
-        background: var(--gradient-cyber);
-        margin: 15px auto;
-        border-radius: 2px;
-        animation: glow 2s ease-in-out infinite;
-    }
-    
-    /* ===== BOUTONS CYBER ===== */
+    /* ===== BOUTONS CYBER MORPH ===== */
     .stButton > button {
-        background: var(--gradient-blue);
-        color: white !important;
-        border: none;
-        padding: 1.2rem 3rem;
-        border-radius: 12px;
-        font-weight: 700;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: var(--shadow);
+        font-family: 'Rajdhani', sans-serif !important;
+        font-weight: 600;
         font-size: 1.1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: transparent;
+        border: 2px solid var(--primary-cyan);
+        color: var(--primary-cyan) !important;
+        padding: 1.2rem 3rem;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 25%, 100% 100%, 10% 100%, 0% 75%);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
         overflow: hidden;
-        letter-spacing: 0.5px;
+        backdrop-filter: blur(5px);
     }
     
     .stButton > button::before {
@@ -413,14 +410,19 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: 0.5s;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 243, 255, 0.2), 
+            transparent);
+        transition: 0.6s;
     }
     
     .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg), 0 0 30px rgba(14, 165, 233, 0.4);
-        background: var(--gradient-blue);
+        background: var(--gradient-main);
+        color: var(--bg-space) !important;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 90% 100%, 0% 100%);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: var(--shadow-hologram);
     }
     
     .stButton > button:hover::before {
@@ -428,134 +430,172 @@ st.markdown("""
     }
     
     .stButton > button[kind="primary"] {
-        background: var(--gradient-cyber);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        font-weight: 800;
-        animation: glow 2s ease-in-out infinite;
+        background: var(--gradient-main);
+        color: var(--bg-space) !important;
+        border: none;
+        font-weight: 700;
+        animation: pulseGlow 2s ease-in-out infinite;
     }
     
-    /* ===== ONGLETS CYBER ===== */
+    /* ===== SIDEBAR CYBER MORPH ===== */
+    [data-testid="stSidebar"] {
+        background: rgba(5, 5, 16, 0.9) !important;
+        backdrop-filter: blur(25px);
+        border-right: 2px solid;
+        border-image: linear-gradient(to bottom, var(--primary-cyan), var(--primary-purple)) 1;
+    }
+    
+    .sidebar-title {
+        font-family: 'Orbitron', monospace !important;
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        padding: 2rem 1rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(90deg, var(--primary-cyan), var(--text-primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+    
+    .sidebar-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        width: 50%;
+        height: 3px;
+        background: var(--gradient-main);
+        clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
+    }
+    
+    /* ===== ONGLETS MORPHING ===== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
-        background: rgba(30, 41, 59, 0.5);
+        background: rgba(16, 16, 32, 0.6);
         backdrop-filter: blur(10px);
-        padding: 0.8rem;
-        border-radius: var(--border-radius-sm);
-        border: 1px solid var(--card-border);
+        padding: 1rem;
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        clip-path: polygon(0% 0%, 98% 0%, 100% 20%, 100% 100%, 0% 100%);
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(14, 165, 233, 0.1);
-        border-radius: 10px;
-        padding: 1.2rem 2.5rem;
-        border: 1px solid var(--card-border);
+        font-family: 'Rajdhani', sans-serif;
         font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        background: transparent;
+        border: none;
+        color: var(--text-cyan) !important;
+        padding: 1rem 2rem;
+        margin: 0 0.5rem;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
         transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(14, 165, 233, 0.2);
-        border-color: var(--primary-500);
+        background: rgba(0, 243, 255, 0.1);
+        transform: translateY(-2px);
     }
     
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        background: var(--gradient-blue);
-        border-color: var(--primary-500);
-        box-shadow: var(--shadow), 0 0 20px rgba(14, 165, 233, 0.3);
-        transform: scale(1.05);
+        background: var(--gradient-main);
+        color: var(--bg-space) !important;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 90% 100%, 0% 100%);
+        box-shadow: var(--border-glow);
+        font-weight: 700;
     }
     
     /* ===== INPUTS CYBER ===== */
-    .stTextArea textarea, 
-    .stTextInput input,
-    .stSelectbox div[data-baseweb="select"] {
-        background: rgba(30, 41, 59, 0.6) !important;
-        backdrop-filter: blur(5px);
-        border: 2px solid rgba(71, 85, 105, 0.5) !important;
-        border-radius: 12px !important;
-        font-size: 1.1rem;
+    .stTextArea textarea,
+    .stTextInput input {
+        font-family: 'Exo 2', sans-serif !important;
+        background: rgba(16, 16, 32, 0.7) !important;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 243, 255, 0.3) !important;
+        color: var(--text-primary) !important;
+        padding: 1.2rem 1.5rem !important;
+        clip-path: polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 5% 100%, 0% 75%);
         transition: all 0.3s ease;
+        font-size: 1.1rem;
     }
     
     .stTextArea textarea:focus,
     .stTextInput input:focus {
-        border-color: var(--primary-500) !important;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2) !important;
-        background: rgba(30, 41, 59, 0.8) !important;
+        border-color: var(--primary-cyan) !important;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.3) !important;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 95% 100%, 0% 100%);
+        transform: translateY(-2px);
     }
     
-    /* ===== PROGRESS BAR CYBER ===== */
-    .stProgress > div > div > div {
-        background: var(--gradient-cyber);
-        border-radius: 10px;
-    }
-    
-    /* ===== EXPANDER CYBER ===== */
+    /* ===== EXPANDER MORPH ===== */
     .streamlit-expanderHeader {
-        background: rgba(30, 41, 59, 0.6);
+        font-family: 'Rajdhani', sans-serif !important;
+        font-weight: 600;
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+        background: rgba(16, 16, 32, 0.7);
         backdrop-filter: blur(10px);
-        border: 2px solid var(--card-border);
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 1.1rem;
+        border: 2px solid rgba(0, 243, 255, 0.2);
+        clip-path: polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 0% 100%);
+        color: var(--text-cyan) !important;
+        padding: 1.5rem;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(14, 165, 233, 0.2);
-        border-color: var(--primary-500);
+        background: rgba(0, 243, 255, 0.1);
+        border-color: var(--primary-cyan);
+        clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 95% 100%, 0% 100%);
+        transform: translateY(-2px);
     }
     
     .streamlit-expanderContent {
-        background: rgba(2, 6, 23, 0.8);
-        border: 2px solid var(--card-border);
-        border-radius: 0 0 12px 12px;
-        margin-top: -2px;
-        backdrop-filter: blur(10px);
+        background: rgba(5, 5, 16, 0.8);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(0, 243, 255, 0.2);
+        border-top: none;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 95%, 95% 100%, 0% 100%);
+        padding: 2rem;
     }
     
     /* ===== ALERTES CYBER ===== */
     .stAlert {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
+        font-family: 'Exo 2', sans-serif !important;
+        background: rgba(16, 16, 32, 0.8);
+        backdrop-filter: blur(15px);
         border: 2px solid;
-        border-radius: var(--border-radius);
+        clip-path: polygon(0% 0%, 98% 0%, 100% 15%, 100% 100%, 0% 100%);
+        padding: 2rem;
+        margin: 2rem 0;
     }
     
     .stAlert.success {
-        border-color: var(--primary-500);
-        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(30, 41, 59, 0.7));
+        border-image: linear-gradient(45deg, var(--neon-green), var(--primary-cyan)) 1;
     }
     
     .stAlert.error {
-        border-color: #EF4444;
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(30, 41, 59, 0.7));
-    }
-    
-    .stAlert.warning {
-        border-color: #F59E0B;
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(30, 41, 59, 0.7));
+        border-image: linear-gradient(45deg, #ff0066, var(--neon-pink)) 1;
     }
     
     .stAlert.info {
-        border-color: var(--primary-400);
-        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(30, 41, 59, 0.7));
+        border-image: linear-gradient(45deg, var(--primary-cyan), var(--primary-blue)) 1;
     }
     
-    /* ===== FOOTER CYBER ===== */
+    /* ===== FOOTER HOLOGRAM ===== */
     .footer {
+        font-family: 'Rajdhani', sans-serif !important;
         text-align: center;
-        padding: 3rem;
-        font-size: 0.95rem;
-        border-top: 1px solid rgba(14, 165, 233, 0.2);
-        margin-top: 4rem;
-        background: rgba(14, 165, 233, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: var(--border-radius-lg);
+        padding: 4rem 2rem;
+        margin-top: 5rem;
+        background: rgba(16, 16, 32, 0.6);
+        backdrop-filter: blur(20px);
+        border-top: 2px solid;
+        border-image: linear-gradient(90deg, transparent, var(--primary-cyan), transparent) 1;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 90% 100%, 10% 100%, 0% 90%);
         position: relative;
-        overflow: hidden;
     }
     
     .footer::before {
@@ -565,151 +605,145 @@ st.markdown("""
         left: 0;
         right: 0;
         height: 2px;
-        background: var(--gradient-cyber);
+        background: var(--gradient-main);
+        clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
     }
     
     .footer-brand {
-        font-size: 2rem;
+        font-family: 'Orbitron', monospace !important;
+        font-size: 2.5rem;
         font-weight: 900;
-        margin-bottom: 1rem;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        background: var(--gradient-cyber);
+        letter-spacing: 4px;
+        background: var(--gradient-main);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
     }
     
     .footer-subtitle {
-        color: var(--text-secondary) !important;
         font-size: 1.1rem;
-        margin-bottom: 1.5rem;
-        opacity: 0.9;
+        letter-spacing: 2px;
+        color: var(--text-cyan) !important;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
     }
     
-    /* ===== SCROLLBAR CYBER ===== */
-    ::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: rgba(14, 165, 233, 0.1);
-        border-radius: 6px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: var(--gradient-blue);
-        border-radius: 6px;
-        border: 2px solid var(--darker-bg);
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--gradient-cyber);
-    }
-    
-    /* ===== EFFETS DE SURBRILANCE ===== */
-    .highlight-text {
-        background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 700;
-    }
-    
-    .glow-effect {
-        filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.5));
-    }
-    
-    /* ===== GRADIENTS ANIMÉS ===== */
-    .animated-gradient {
-        background: linear-gradient(-45deg, var(--primary-500), var(--cyber-blue), var(--cyber-purple), var(--cyber-pink));
-        background-size: 400% 400%;
-        animation: gradient 15s ease infinite;
-    }
-    
-    @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .main-header {
-            font-size: 2.5rem;
-            padding: 2rem;
-        }
-        
-        .sub-header {
-            font-size: 1.8rem;
-        }
-        
-        .metric-card .metric-value {
-            font-size: 2.5rem;
-        }
-        
-        .file-upload-box {
-            padding: 3rem 1.5rem;
-        }
-        
-        .stButton > button {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-        }
-    }
-    
-    /* ===== EFFETS SPÉCIAUX POUR GRAPHIQUES ===== */
-    .js-plotly-plot {
-        background: rgba(30, 41, 59, 0.5) !important;
-        backdrop-filter: blur(10px);
-        border-radius: var(--border-radius);
-        padding: 1.5rem;
-        border: 1px solid var(--card-border);
-    }
-    
-    /* ===== SPINNER CYBER ===== */
-    .stSpinner > div {
-        border-color: var(--cyber-blue) transparent transparent transparent;
-    }
-    
-    /* ===== BADGES DE CATÉGORIES ===== */
-    .category-badge {
-        display: inline-block;
-        padding: 0.5rem 1.5rem;
-        background: rgba(14, 165, 233, 0.1);
-        border: 1px solid rgba(14, 165, 233, 0.3);
-        border-radius: 20px;
-        font-weight: 600;
-        margin: 0.3rem;
-        transition: all 0.3s ease;
-    }
-    
-    .category-badge:hover {
-        background: rgba(14, 165, 233, 0.2);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(14, 165, 233, 0.2);
-    }
-    
-    /* ===== EFFETS DE LUMIÈRE ===== */
-    .light-effect {
+    /* ===== EFFETS DE PARTICULES ===== */
+    .particles {
         position: fixed;
         pointer-events: none;
         z-index: -1;
     }
     
-    .light-effect:nth-child(1) {
-        top: 20%;
-        left: 10%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+    .particle {
+        position: absolute;
+        background: var(--primary-cyan);
+        border-radius: 50%;
+        animation: float 20s infinite linear;
     }
     
-    .light-effect:nth-child(2) {
-        bottom: 20%;
-        right: 10%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    /* ===== ORGANISATION DES PARAGRAPHES ===== */
+    .paragraph-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
+        margin: 3rem 0;
+    }
+    
+    .paragraph-card {
+        background: rgba(16, 16, 32, 0.5);
+        backdrop-filter: blur(10px);
+        padding: 2.5rem;
+        border: 1px solid rgba(0, 243, 255, 0.1);
+        clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%);
+        transition: all 0.4s ease;
+    }
+    
+    .paragraph-card:hover {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%);
+        transform: translateY(-8px);
+        border-color: var(--primary-cyan);
+    }
+    
+    .paragraph-number {
+        font-family: 'Orbitron', monospace;
+        font-size: 2rem;
+        color: var(--primary-cyan);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 1200px) {
+        .main-header { font-size: 3.5rem; }
+        .cyber-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 768px) {
+        .main-header { 
+            font-size: 2.5rem; 
+            padding: 2.5rem 1.5rem;
+            clip-path: polygon(0% 0%, 98% 0%, 100% 5%, 100% 95%, 98% 100%, 2% 100%, 0% 95%, 0% 5%);
+        }
+        
+        .cyber-grid { grid-template-columns: 1fr; }
+        .metric-card { padding: 2rem; }
+        .metric-value { font-size: 2.8rem; }
+        
+        .stButton > button {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .arabic-text {
+            font-size: 1.4rem;
+            padding: 2rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .main-header { font-size: 2rem; }
+        .sub-header { font-size: 1.8rem; }
+        .metric-value { font-size: 2.2rem; }
+        .paragraph-grid { grid-template-columns: 1fr; }
+    }
+    
+    /* ===== EFFETS SPÉCIAUX ===== */
+    .glitch-text {
+        position: relative;
+        animation: glitch 3s infinite;
+    }
+    
+    .hologram {
+        background: linear-gradient(45deg, 
+            transparent 45%, 
+            rgba(0, 243, 255, 0.1) 50%, 
+            transparent 55%);
+        background-size: 200% 200%;
+        animation: hologramFloat 6s ease-in-out infinite;
+    }
+    
+    /* ===== SCROLLBAR FUTURISTE ===== */
+    ::-webkit-scrollbar {
+        width: 12px;
+        background: rgba(16, 16, 32, 0.5);
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 243, 255, 0.1);
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--gradient-main);
+        border-radius: 10px;
+        border: 2px solid var(--bg-space);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--gradient-neon);
     }
 </style>
 """, unsafe_allow_html=True)
