@@ -720,7 +720,7 @@ def classify_with_svc(text, model, vectorizer):
         st.error(f"❌ Erreur lors de la classification: {str(e)}")
         return None, None
     
-st.markdown('<h1 class="main-header">SNI TASNEEF 🤖</h1>', unsafe_allow_html=True)
+
 # ==================== INTERFACE ====================
 # Sidebar pour la navigation
 with st.sidebar:
@@ -762,7 +762,7 @@ with st.sidebar:
             st.info(f"📚 {len(st.session_state.svc_vectorizer.vocabulary_)} mots")
 
 # Header principal
-st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes - Linear SVC</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🤖 Classification de Documents Arabes</h1>', unsafe_allow_html=True)
 
 # ==================== PAGES ====================
 if page == "Accueil":
@@ -862,7 +862,7 @@ elif page == "Test en Temps Réel":
         """)
         st.stop()
     
-    st.success("✅ **Système Linear SVC prêt** - Entrez un texte arabe pour classification")
+    st.success("Entrez un texte arabe pour classification")
     
     # Onglets pour différentes méthodes d'entrée
     tab1, tab2 = st.tabs(["📝 Saisie Manuelle", "📁 Téléchargement de Fichier"])
@@ -944,7 +944,7 @@ elif page == "Test en Temps Réel":
     # Bouton de classification
     st.markdown("---")
     
-    if st.button("🚀 Lancer la Classification avec Linear SVC", type="primary", use_container_width=True):
+    if st.button("Lancer la Classification avec Linear SVC", type="primary", use_container_width=True):
         if text_input and text_input.strip():
             with st.spinner("Analyse en cours avec Linear SVC..."):
                 # Créer une barre de progression
@@ -1028,7 +1028,7 @@ elif page == "Test en Temps Réel":
                             y='Probabilité',
                             color='Probabilité',
                             color_continuous_scale='oranges',
-                            title='Distribution des Scores par Catégorie - Linear SVC'
+                            title='Distribution des Scores par Catégorie'
                         )
                         fig.update_layout(yaxis_range=[0, 1], showlegend=False)
                         fig.update_yaxes(tickformat=".0%", title="Probabilité")
