@@ -36,157 +36,238 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* ===== VARIABLES DE COULEUR - THÈME BLEU FONCÉ ===== */
+    /* ===== VARIABLES DE COULEUR - THÈME FUTURISTE BLEU CYBER ===== */
     :root {
-        --primary: #1E3A8A;
-        --primary-dark: #1E40AF;
-        --primary-light: #3B82F6;
-        --primary-50: #EFF6FF;
-        --primary-100: #DBEAFE;
-        --primary-200: #BFDBFE;
-        --primary-300: #93C5FD;
-        --primary-400: #60A5FA;
-        --primary-500: #3B82F6;
-        --primary-600: #2563EB;
-        --primary-700: #1D4ED8;
-        --primary-800: #1E40AF;
-        --primary-900: #1E3A8A;
+        --primary: #0EA5E9;
+        --primary-dark: #0369A1;
+        --primary-light: #38BDF8;
+        --primary-50: #F0F9FF;
+        --primary-100: #E0F2FE;
+        --primary-200: #BAE6FD;
+        --primary-300: #7DD3FC;
+        --primary-400: #38BDF8;
+        --primary-500: #0EA5E9;
+        --primary-600: #0284C7;
+        --primary-700: #0369A1;
+        --primary-800: #075985;
+        --primary-900: #0C4A6E;
+        
+        --cyber-blue: #00D4FF;
+        --cyber-purple: #8B5CF6;
+        --cyber-pink: #EC4899;
+        --neon-blue: #00F7FF;
         
         --dark-bg: #0F172A;
-        --darker-bg: #0A0F1C;
-        --card-bg: #1E293B;
-        --card-bg-light: #334155;
-        --card-border: #475569;
-        --card-border-light: #64748B;
+        --darker-bg: #020617;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --card-bg-light: rgba(51, 65, 85, 0.8);
+        --card-border: rgba(71, 85, 105, 0.3);
+        --card-border-light: rgba(100, 116, 139, 0.5);
         
         --text-primary: #FFFFFF;
-        --text-secondary: #F8FAFC;
-        --text-muted: #CBD5E1;
+        --text-secondary: #E2E8F0;
+        --text-muted: #94A3B8;
+        --text-glow: rgba(255, 255, 255, 0.9);
         
-        --gradient-blue: linear-gradient(135deg, #1E40AF 0%, #1E3A8A 100%);
-        --gradient-blue-dark: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-        --gradient-blue-light: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+        --gradient-blue: linear-gradient(135deg, var(--primary-500) 0%, var(--cyber-blue) 100%);
+        --gradient-cyber: linear-gradient(135deg, var(--cyber-blue) 0%, var(--cyber-purple) 50%, var(--cyber-pink) 100%);
+        --gradient-dark: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+        --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
         
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.5);
+        --shadow-neon: 0 0 20px rgba(14, 165, 233, 0.3);
+        
+        --border-radius: 16px;
+        --border-radius-lg: 24px;
+        --border-radius-sm: 12px;
     }
     
-    /* ===== FOND GÉNÉRAL ===== */
+    /* ===== ANIMATIONS ===== */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes glow {
+        0%, 100% { box-shadow: var(--shadow-neon); }
+        50% { box-shadow: 0 0 30px rgba(14, 165, 233, 0.5); }
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* ===== FOND GÉNÉRAL AVEC EFFET DE PARTICULES ===== */
     .stApp {
-        background: var(--dark-bg);
+        background: var(--darker-bg);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 30%);
         color: var(--text-primary);
+        animation: slideIn 0.6s ease-out;
     }
     
-    /* ===== TOUS LES TEXTES EN BLANC ===== */
-    h1, h2, h3, h4, h5, h6,
-    p, span, div, label,
-    .stMarkdown, .stText, 
-    .stAlert, .stMetric,
-    [class*="st-"] {
+    /* ===== TOUS LES TEXTES ===== */
+    * {
         color: var(--text-primary) !important;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
     }
     
-    /* ===== EN-TÊTE PRINCIPAL ===== */
+    /* ===== EN-TÊTE PRINCIPAL CYBER ===== */
     .main-header {
-        font-size: 3rem;
-        font-weight: 800;
-        color: var(--text-primary) !important;
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-300) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         text-align: center;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        background: var(--gradient-blue-dark);
-        border-radius: 15px;
-        border: 1px solid var(--primary-800);
+        padding: 3rem;
+        margin-bottom: 3rem;
+        background: rgba(30, 41, 59, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: var(--border-radius-lg);
         position: relative;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: float 6s ease-in-out infinite;
     }
     
     .main-header::before {
-        content: 'تصنيف';
-        font-size: 1.3rem;
-        color: var(--primary-300);
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--gradient-cyber);
+        z-index: -1;
+        border-radius: var(--border-radius-lg);
+        opacity: 0.3;
+    }
+    
+    .main-header::after {
+        content: '🤖 SNI TASNEEF';
+        font-size: 1.2rem;
+        color: var(--cyber-blue);
         display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 400;
-        letter-spacing: 3px;
+        margin-top: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     
-    /* ===== SOUS-TITRES ===== */
+    /* ===== SOUS-TITRES HOLOGRAFIQUES ===== */
     .sub-header {
-        font-size: 2rem;
-        color: var(--text-primary) !important;
-        border-bottom: 3px solid var(--primary-600);
-        padding-bottom: 1rem;
-        margin-top: 2.5rem;
-        margin-bottom: 1.5rem;
-        font-weight: 700;
+        font-size: 2.2rem;
+        background: linear-gradient(90deg, var(--primary-400), var(--cyber-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border-bottom: 2px solid;
+        border-image: linear-gradient(90deg, var(--primary-500), transparent) 1;
+        padding-bottom: 1.2rem;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        font-weight: 800;
         position: relative;
-        background: linear-gradient(to right, var(--primary-900), transparent);
-        padding-left: 1rem;
-        border-radius: 5px;
+        padding-left: 0;
+        text-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
     }
     
-    /* ===== CARTES MÉTRIQUES ===== */
+    .sub-header::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-blue);
+        border-radius: 2px;
+    }
+    
+    /* ===== CARTES MÉTRIQUES GLASSMORPHISM ===== */
     .metric-card {
-        background: var(--card-bg);
-        padding: 1.8rem;
-        border-radius: 12px;
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: var(--border-radius);
         border: 1px solid var(--card-border);
-        color: var(--text-primary) !important;
         text-align: center;
         box-shadow: var(--shadow);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        min-height: 130px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 150px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         position: relative;
         overflow: hidden;
+        animation: glow 3s ease-in-out infinite;
     }
     
     .metric-card::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--gradient-blue-light);
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: 0.5s;
     }
     
     .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-xl);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-xl), 0 0 40px rgba(14, 165, 233, 0.4);
         border-color: var(--primary-500);
-        background: var(--primary-900);
+        background: rgba(30, 41, 59, 0.6);
+    }
+    
+    .metric-card:hover::before {
+        left: 100%;
     }
     
     .metric-card .metric-value {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--text-primary) !important;
+        font-size: 3rem;
+        font-weight: 900;
+        background: var(--gradient-blue);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         margin: 0.5rem 0;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
     }
     
     .metric-card .metric-label {
         font-size: 0.9rem;
-        color: var(--primary-300) !important;
+        color: var(--text-secondary) !important;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
+        letter-spacing: 2px;
         font-weight: 600;
+        opacity: 0.9;
     }
     
-    /* ===== CARTE DE RÉSULTAT ===== */
+    /* ===== CARTE DE RÉSULTAT CYBER ===== */
     .result-card {
-        background: var(--gradient-blue-dark);
-        padding: 2.5rem;
-        border-radius: 15px;
-        border: 2px solid var(--primary-700);
-        color: var(--text-primary) !important;
+        background: rgba(14, 165, 233, 0.1);
+        backdrop-filter: blur(15px);
+        padding: 3rem;
+        border-radius: var(--border-radius-lg);
+        border: 2px solid rgba(14, 165, 233, 0.3);
         text-align: center;
-        box-shadow: var(--shadow-lg);
+        box-shadow: var(--shadow-lg), inset 0 0 50px rgba(14, 165, 233, 0.1);
         position: relative;
         overflow: hidden;
     }
@@ -198,495 +279,438 @@ st.markdown("""
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        background: var(--gradient-cyber);
+        opacity: 0.1;
+        z-index: -1;
     }
     
-    /* ===== ZONE DE TÉLÉCHARGEMENT ===== */
+    .result-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+            transparent,
+            var(--cyber-blue),
+            transparent 30%
+        );
+        animation: rotate 4s linear infinite;
+    }
+    
+    /* ===== ZONE DE TÉLÉCHARGEMENT CYBER ===== */
     .file-upload-box {
-        border: 3px dashed var(--primary-700);
-        border-radius: 15px;
-        padding: 3rem;
+        border: 2px dashed;
+        border-image: linear-gradient(135deg, var(--primary-500), var(--cyber-blue)) 1;
+        border-radius: var(--border-radius);
+        padding: 4rem 2rem;
         text-align: center;
-        background: rgba(30, 41, 59, 0.7);
-        margin: 2rem 0;
+        background: rgba(14, 165, 233, 0.05);
+        backdrop-filter: blur(5px);
+        margin: 2.5rem 0;
         transition: all 0.3s ease;
-        color: var(--text-primary) !important;
     }
     
     .file-upload-box:hover {
-        border-color: var(--primary-500);
-        background: rgba(30, 41, 59, 0.9);
-        box-shadow: var(--shadow-lg);
+        background: rgba(14, 165, 233, 0.1);
+        box-shadow: var(--shadow-lg), 0 0 30px rgba(14, 165, 233, 0.2);
+        transform: scale(1.01);
     }
     
-    /* ===== TEXTE ARABE ===== */
+    .file-upload-box h3 {
+        background: var(--gradient-blue);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* ===== TEXTE ARABE FUTURISTE ===== */
     .arabic-text {
         direction: rtl;
         text-align: right;
-        font-size: 1.4em;
+        font-size: 1.5em;
         line-height: 2;
-        padding: 2rem;
-        background: var(--card-bg);
-        border-radius: 12px;
-        border-right: 5px solid var(--primary-600);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 2.5rem;
+        background: rgba(30, 41, 59, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        border-right: 4px solid var(--primary-500);
+        font-family: 'Segoe UI', system-ui, sans-serif;
         box-shadow: var(--shadow);
-        margin: 1.5rem 0;
-        color: var(--text-primary) !important;
+        margin: 2rem 0;
+        position: relative;
+        overflow: hidden;
     }
     
-    /* ===== HIGHLIGHT SVC ===== */
-    .svc-highlight {
+    .arabic-text::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
         background: var(--gradient-blue);
-        color: var(--text-primary) !important;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin: 1.5rem 0;
-        font-weight: 700;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--primary-600);
     }
     
-    /* ===== SIDEBAR ===== */
+    /* ===== SIDEBAR CYBER ===== */
     [data-testid="stSidebar"] {
-        background: var(--darker-bg) !important;
-        border-right: 2px solid var(--primary-900);
+        background: rgba(2, 6, 23, 0.8) !important;
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(14, 165, 233, 0.2);
     }
     
     [data-testid="stSidebar"] > div:first-child {
-        background: var(--gradient-blue-dark);
-        padding: 2rem 1rem;
+        background: rgba(14, 165, 233, 0.1);
+        padding: 2.5rem 1.5rem;
+        border-bottom: 1px solid rgba(14, 165, 233, 0.2);
     }
     
     .sidebar-title {
-        color: var(--text-primary) !important;
-        font-size: 1.8rem;
-        font-weight: 800;
-        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 900;
         text-align: center;
         position: relative;
-        padding-bottom: 1rem;
+        padding-bottom: 1.5rem;
+        background: var(--gradient-cyber);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 2.5rem;
     }
     
     .sidebar-title::after {
         content: '';
         display: block;
-        width: 60px;
+        width: 80px;
         height: 4px;
-        background: var(--gradient-blue-light);
+        background: var(--gradient-cyber);
         margin: 15px auto;
         border-radius: 2px;
+        animation: glow 2s ease-in-out infinite;
     }
     
-    /* ===== TOUS LES BOUTONS ===== */
+    /* ===== BOUTONS CYBER ===== */
     .stButton > button {
         background: var(--gradient-blue);
-        color: var(--text-primary) !important;
+        color: white !important;
         border: none;
-        padding: 1rem 2.5rem;
-        border-radius: 10px;
+        padding: 1.2rem 3rem;
+        border-radius: 12px;
         font-weight: 700;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: var(--shadow);
-        font-size: 1rem;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
     }
     
     .stButton > button:hover {
         transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
-        background: var(--primary-800);
+        box-shadow: var(--shadow-lg), 0 0 30px rgba(14, 165, 233, 0.4);
+        background: var(--gradient-blue);
     }
     
-    /* ===== BOUTON PRIMAIRE ===== */
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
     .stButton > button[kind="primary"] {
-        background: var(--gradient-blue-light);
-        color: var(--text-primary) !important;
+        background: var(--gradient-cyber);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         font-weight: 800;
-        border: 2px solid var(--primary-400);
+        animation: glow 2s ease-in-out infinite;
     }
     
-    .stButton > button[kind="primary"]:hover {
-        background: var(--primary-600);
-        border-color: var(--primary-300);
-    }
-    
-    /* ===== ONGLETS ===== */
+    /* ===== ONGLETS CYBER ===== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background: var(--card-bg);
-        padding: 0.5rem;
-        border-radius: 10px;
+        gap: 12px;
+        background: rgba(30, 41, 59, 0.5);
+        backdrop-filter: blur(10px);
+        padding: 0.8rem;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--card-border);
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: var(--primary-900);
-        border-radius: 8px;
-        padding: 1rem 2rem;
+        background: rgba(14, 165, 233, 0.1);
+        border-radius: 10px;
+        padding: 1.2rem 2.5rem;
         border: 1px solid var(--card-border);
-        color: var(--text-primary) !important;
         font-weight: 600;
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: var(--primary-800);
+        background: rgba(14, 165, 233, 0.2);
+        border-color: var(--primary-500);
     }
     
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        background: var(--gradient-blue-light);
-        color: var(--text-primary) !important;
+        background: var(--gradient-blue);
         border-color: var(--primary-500);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow), 0 0 20px rgba(14, 165, 233, 0.3);
+        transform: scale(1.05);
     }
     
-    /* ===== ZONES DE SAISIE ===== */
+    /* ===== INPUTS CYBER ===== */
     .stTextArea textarea, 
     .stTextInput input,
     .stSelectbox div[data-baseweb="select"] {
-        background: var(--card-bg) !important;
-        color: var(--text-primary) !important;
-        border: 2px solid var(--card-border) !important;
-        border-radius: 10px !important;
-        font-size: 1rem;
+        background: rgba(30, 41, 59, 0.6) !important;
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(71, 85, 105, 0.5) !important;
+        border-radius: 12px !important;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
     }
     
     .stTextArea textarea:focus,
     .stTextInput input:focus {
         border-color: var(--primary-500) !important;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2) !important;
+        background: rgba(30, 41, 59, 0.8) !important;
     }
     
-    /* ===== BARRE DE PROGRESSION ===== */
+    /* ===== PROGRESS BAR CYBER ===== */
     .stProgress > div > div > div {
-        background: var(--gradient-blue-light);
+        background: var(--gradient-cyber);
+        border-radius: 10px;
     }
     
-    /* ===== EXPANDER ===== */
+    /* ===== EXPANDER CYBER ===== */
     .streamlit-expanderHeader {
-        background: var(--card-bg);
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
         border: 2px solid var(--card-border);
-        border-radius: 10px;
-        color: var(--text-primary) !important;
+        border-radius: 12px;
         font-weight: 700;
         font-size: 1.1rem;
+        transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: var(--primary-900);
-        border-color: var(--primary-600);
+        background: rgba(14, 165, 233, 0.2);
+        border-color: var(--primary-500);
     }
     
     .streamlit-expanderContent {
-        background: var(--darker-bg);
+        background: rgba(2, 6, 23, 0.8);
         border: 2px solid var(--card-border);
-        border-radius: 0 0 10px 10px;
+        border-radius: 0 0 12px 12px;
         margin-top: -2px;
-        color: var(--text-primary) !important;
+        backdrop-filter: blur(10px);
     }
     
-    /* ===== MÉTRIQUES ===== */
-    .stMetric {
-        background: var(--card-bg);
-        padding: 1.5rem;
-        border-radius: 12px;
-        border: 2px solid var(--card-border);
-    }
-    
-    .stMetric label, 
-    .stMetric div,
-    .stMetric [data-testid="stMetricLabel"],
-    .stMetric [data-testid="stMetricValue"],
-    .stMetric [data-testid="stMetricDelta"] {
-        color: var(--text-primary) !important;
-    }
-    
-    .stMetric [data-testid="stMetricValue"] {
-        color: var(--text-primary) !important;
-        font-size: 2.2rem !important;
-        font-weight: 800 !important;
-    }
-    
-    /* ===== ALERTES ===== */
+    /* ===== ALERTES CYBER ===== */
     .stAlert {
-        background: var(--card-bg);
-        border: 2px solid var(--card-border);
-        border-radius: 12px;
-        color: var(--text-primary) !important;
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(10px);
+        border: 2px solid;
+        border-radius: var(--border-radius);
     }
     
     .stAlert.success {
         border-color: var(--primary-500);
-        background: linear-gradient(135deg, var(--primary-900), var(--card-bg));
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(30, 41, 59, 0.7));
     }
     
     .stAlert.error {
         border-color: #EF4444;
-        background: linear-gradient(135deg, #7F1D1D, var(--card-bg));
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(30, 41, 59, 0.7));
     }
     
     .stAlert.warning {
         border-color: #F59E0B;
-        background: linear-gradient(135deg, #78350F, var(--card-bg));
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(30, 41, 59, 0.7));
     }
     
     .stAlert.info {
         border-color: var(--primary-400);
-        background: linear-gradient(135deg, var(--primary-900), var(--card-bg));
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(30, 41, 59, 0.7));
     }
     
-    /* ===== RADIO BUTTONS ===== */
-    .stRadio > div {
-        background: var(--card-bg);
-        padding: 1rem;
-        border-radius: 10px;
-        border: 2px solid var(--card-border);
-    }
-    
-    .stRadio label {
-        color: var(--text-primary) !important;
-        font-weight: 600;
-    }
-    
-    /* ===== SPINNER ===== */
-    .stSpinner > div {
-        border-color: var(--primary-500) transparent transparent transparent;
-    }
-    
-    /* ===== FOOTER ===== */
+    /* ===== FOOTER CYBER ===== */
     .footer {
         text-align: center;
-        padding: 2.5rem;
-        color: var(--text-primary) !important;
+        padding: 3rem;
         font-size: 0.95rem;
-        border-top: 2px solid var(--primary-900);
-        margin-top: 3rem;
-        background: var(--gradient-blue-dark);
-        border-radius: 15px;
+        border-top: 1px solid rgba(14, 165, 233, 0.2);
+        margin-top: 4rem;
+        background: rgba(14, 165, 233, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius-lg);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gradient-cyber);
     }
     
     .footer-brand {
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 900;
-        color: var(--text-primary) !important;
         margin-bottom: 1rem;
         letter-spacing: 3px;
         text-transform: uppercase;
+        background: var(--gradient-cyber);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     
     .footer-subtitle {
-        color: var(--primary-300) !important;
+        color: var(--text-secondary) !important;
         font-size: 1.1rem;
         margin-bottom: 1.5rem;
+        opacity: 0.9;
     }
     
-    /* ===== GRAPHIQUES ===== */
-    .js-plotly-plot {
-        background: var(--card-bg) !important;
-        border-radius: 12px;
-        padding: 1rem;
-    }
-    
-    /* ===== SCROLLBAR PERSONNALISÉE ===== */
+    /* ===== SCROLLBAR CYBER ===== */
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
     }
     
     ::-webkit-scrollbar-track {
-        background: var(--primary-900);
-        border-radius: 5px;
+        background: rgba(14, 165, 233, 0.1);
+        border-radius: 6px;
     }
     
     ::-webkit-scrollbar-thumb {
-        background: var(--primary-600);
-        border-radius: 5px;
+        background: var(--gradient-blue);
+        border-radius: 6px;
+        border: 2px solid var(--darker-bg);
     }
     
     ::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-500);
+        background: var(--gradient-cyber);
+    }
+    
+    /* ===== EFFETS DE SURBRILANCE ===== */
+    .highlight-text {
+        background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+    }
+    
+    .glow-effect {
+        filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.5));
+    }
+    
+    /* ===== GRADIENTS ANIMÉS ===== */
+    .animated-gradient {
+        background: linear-gradient(-45deg, var(--primary-500), var(--cyber-blue), var(--cyber-purple), var(--cyber-pink));
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+    
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
         .main-header {
-            font-size: 2.2rem;
-            padding: 1.5rem;
+            font-size: 2.5rem;
+            padding: 2rem;
         }
         
         .sub-header {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
         }
         
         .metric-card .metric-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
         
         .file-upload-box {
-            padding: 2rem;
+            padding: 3rem 1.5rem;
+        }
+        
+        .stButton > button {
+            padding: 1rem 2rem;
+            font-size: 1rem;
         }
     }
-
-        /* ===== STYLES MANQUANTS POUR LA VISIBILITÉ ===== */
-
-        /* 1. Tous les textes des widgets Streamlit */
-        .stTextInput > div > div > input,
-        .stTextArea > div > div > textarea,
-        .stSelectbox > div > div > div,
-        .stSlider > div > div > div,
-        .stNumberInput > div > div > input,
-        .stDateInput > div > div > input,
-        .stTimeInput > div > div > input,
-        .stMultiSelect > div > div > div,
-        .stRadio > label,
-        .stCheckbox > label,
-        .stFileUploader > label {
-            color: var(--text-primary) !important;
-        }
-
-        /* 2. Labels des champs de saisie */
-        .stTextInput label,
-        .stTextArea label,
-        .stSelectbox label,
-        .stSlider label,
-        .stNumberInput label,
-        .stDateInput label,
-        .stTimeInput label,
-        .stMultiSelect label {
-            color: var(--text-secondary) !important;
-            font-weight: 600;
-        }
-
-        /* 3. Placeholders */
-        .stTextInput input::placeholder,
-        .stTextArea textarea::placeholder {
-            color: var(--text-muted) !important;
-            opacity: 0.7;
-        }
-
-        /* 4. Sélecteurs et options */
-        div[data-baseweb="select"] > div,
-        div[data-baseweb="menu"] > div > div {
-            background-color: var(--card-bg) !important;
-            color: var(--text-primary) !important;
-        }
-
-        div[data-baseweb="popover"] > div {
-            background-color: var(--card-bg) !important;
-            border: 1px solid var(--card-border) !important;
-        }
-
-        /* 5. Options dans les listes déroulantes */
-        div[data-baseweb="menu"] li {
-            color: var(--text-primary) !important;
-            background-color: var(--card-bg) !important;
-        }
-
-        div[data-baseweb="menu"] li:hover {
-            background-color: var(--primary-900) !important;
-        }
-
-        /* 6. Slider */
-        .stSlider > div > div > div > div {
-            background-color: var(--primary-500) !important;
-        }
-
-        .stSlider > div > div > div > div > div {
-            background-color: var(--primary-300) !important;
-            border: 2px solid var(--text-primary) !important;
-        }
-
-        /* 7. Cases à cocher */
-        .stCheckbox input[type="checkbox"]:checked + span {
-            background-color: var(--primary-500) !important;
-            border-color: var(--primary-500) !important;
-        }
-
-        /* 8. Tooltips */
-        [data-testid="stTooltipContent"] {
-            background-color: var(--card-bg) !important;
-            color: var(--text-primary) !important;
-            border: 1px solid var(--card-border) !important;
-        }
-
-        /* 9. Messages d'erreur et succès */
-        .stException,
-        .stAlert,
-        .stToast {
-            color: var(--text-primary) !important;
-        }
-
-        /* 10. DataFrames et tables */
-        .stDataFrame,
-        .dataframe,
-        table {
-            color: var(--text-primary) !important;
-        }
-
-        .dataframe th,
-        .dataframe td {
-            color: var(--text-primary) !important;
-            border-color: var(--card-border) !important;
-        }
-
-        /* 11. Texte dans les onglets */
-        .stTabs [data-baseweb="tab"] > div > div {
-            color: inherit !important;
-        }
-
-        /* 12. Texte dans les expanders */
-        .streamlit-expanderHeader > div {
-            color: var(--text-primary) !important;
-        }
-
-        /* 13. Texte des tooltips */
-        [data-testid="stTooltipContent"] > div {
-            color: var(--text-primary) !important;
-        }
-
-        /* 14. Texte des notifications */
-        .toast {
-            color: var(--text-primary) !important;
-            background-color: var(--card-bg) !important;
-            border: 1px solid var(--card-border) !important;
-        }
-
-        /* 15. Texte des métriques delta */
-        [data-testid="stMetricDelta"] svg {
-            fill: var(--text-primary) !important;
-        }
-
-        /* 16. Override pour les couleurs spécifiques de Streamlit */
-        div[class*="st-"] {
-            color: var(--text-primary) !important;
-        }
-
-        /* 17. Assurer que tous les textes enfants héritent de la couleur */
-        .stApp *:not(button):not(input):not(textarea):not(select) {
-            color: inherit !important;
-        }
-
-        /* 18. Spécifique pour les tooltips des graphiques */
-        .svg-container text,
-        .plotly text,
-        .js-plotly-plot text {
-            fill: var(--text-primary) !important;
-            color: var(--text-primary) !important;
-        }
-
-        /* 19. Légendes des graphiques */
-        .legendtext {
-            fill: var(--text-primary) !important;
-            color: var(--text-primary) !important;
-        }
-
-        /* 20. Axes des graphiques */
-        .xtitle,
-        .ytitle,
-        .xaxislabel,
-        .yaxislabel {
-            fill: var(--text-primary) !important;
-            color: var(--text-primary) !important;
-        }
+    
+    /* ===== EFFETS SPÉCIAUX POUR GRAPHIQUES ===== */
+    .js-plotly-plot {
+        background: rgba(30, 41, 59, 0.5) !important;
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        border: 1px solid var(--card-border);
+    }
+    
+    /* ===== SPINNER CYBER ===== */
+    .stSpinner > div {
+        border-color: var(--cyber-blue) transparent transparent transparent;
+    }
+    
+    /* ===== BADGES DE CATÉGORIES ===== */
+    .category-badge {
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        background: rgba(14, 165, 233, 0.1);
+        border: 1px solid rgba(14, 165, 233, 0.3);
+        border-radius: 20px;
+        font-weight: 600;
+        margin: 0.3rem;
+        transition: all 0.3s ease;
+    }
+    
+    .category-badge:hover {
+        background: rgba(14, 165, 233, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(14, 165, 233, 0.2);
+    }
+    
+    /* ===== EFFETS DE LUMIÈRE ===== */
+    .light-effect {
+        position: fixed;
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    .light-effect:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+    }
+    
+    .light-effect:nth-child(2) {
+        bottom: 20%;
+        right: 10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    }
 </style>
 """, unsafe_allow_html=True)
 # ==================== CLASSES DE PRÉTRAITEMENT ====================
