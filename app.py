@@ -31,7 +31,6 @@ st.set_page_config(
     page_title="Classification de Documents Arabes",
     page_icon="🤖",
     layout="wide",
-    page_icon="🇸🇦",
     initial_sidebar_state="expanded"
 )
 
