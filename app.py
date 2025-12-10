@@ -900,97 +900,54 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-# ==================== CLASSES DE PRÉTRAITEMENT ====================
-class ArabicTextNormalizer:
-    
-    def __init__(self):
-        self.alif_variations = ['أ', 'إ', 'آ', 'ٱ', 'ا']
-        self.yae_variations = ['ى', 'ئ', 'ي']
-        self.tae_variations = ['ة', 'ه']
-        self.arabic_punctuation = '،؛؟ـ«»'
-        self.extended_punctuation = self.arabic_punctuation + '!"#$%&\'()*+,-./:;<=>@[\\]^_`{|}~'
-        
-    def normalize_alif(self, text):
-        for variation in self.alif_variations[1:]:
-            text = text.replace(variation, self.alif_variations[0])
-        return text
-    
-    def normalize_yae(self, text):
-        for variation in self.yae_variations[1:]:
-            text = text.replace(variation, self.yae_variations[0])
-        return text
-    
-    def normalize_tae(self, text):
-        text = text.replace(self.tae_variations[0], self.tae_variations[1])
-        return text
-    
-    def remove_diacritics(self, text):
-        diacritics = re.compile('[\u064B-\u065F\u0670]')
-        return diacritics.sub('', text)
 
-    def remove_digits(self, text): 
-        text = re.sub(r'\d+', ' ', text)
-        return text
-    
-    def normalize_spaces(self, text):
-        text = re.sub(r'\s+', ' ', text)
-        text = text.strip()
-        return text
-    
-    def remove_punctuation(self, text):
-        return re.sub(f'[{re.escape(self.extended_punctuation)}]', ' ', text)
-    
-    def normalize_text(self, text, 
-                      normalize_chars=True,
-                      remove_diacritics_flag=True,
-                      remove_punct=True, 
-                      remove_digits_flag=True):
-        
-        if normalize_chars:
-            text = self.normalize_alif(text)
-            text = self.normalize_yae(text)
-            text = self.normalize_tae(text)
-        
-        if remove_diacritics_flag:
-            text = self.remove_diacritics(text)
-        
-        if remove_punct:
-            text = self.remove_punctuation(text)
+# ==================== DÉFINITION DES CATÉGORIES ====================
+# ORDRE EXACT utilisé lors de l'entraînement du modèle
+# 0 = Culture, 1 = Finance, 2 = Medical, 3 = Politics, 4 = Religion, 5 = Sports, 6 = Tech
+CATEGORIES = ['Culture', 'Finance', 'Medical', 'Politics', 'Religion', 'Sports', 'Tech']
+CATEGORIES_FR = ['Culture', 'Finance', 'Médical', 'Politique', 'Religion', 'Sports', 'Technologie']
 
-        if remove_digits_flag:
-            text = self.remove_digits(text)
-        
-        text = self.normalize_spaces(text)
-        
-        return text
-
-class ArabicTokenizer:
-    def __init__(self):
-        try:
-            self.arabic_stopwords = set(stopwords.words('arabic'))
-        except:
-            self.arabic_stopwords = set()
-    
-    def tokenize(self, text):
-        tokens = text.split()
-        if self.arabic_stopwords:
-            tokens = [token for token in tokens if token not in self.arabic_stopwords]
-        return tokens
-
-# ==================== FONCTIONS DE PRÉTRAITEMENT ====================
-arabic_text_normalizer = ArabicTextNormalizer()
-arabic_tokenizer = ArabicTokenizer()
-
+# ==================== FONCTIONS DE PRÉTRAITEMENT (VOTRE CODE) ====================
 def arabic_preprocessing(text):
-    """Prétraitement complet du texte arabe"""
-    # Normalisation
-    normalized_text = arabic_text_normalizer.normalize_text(text)
+    """Prétraitement du texte arabe (votre code)"""
+    if not isinstance(text, str):
+        return ""
     
-    # Tokenisation
-    tokens = arabic_tokenizer.tokenize(normalized_text)
+    # Supprimer caractères non-arabes
+    text = re.sub(r'[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\s]', ' ', text)
     
-    # Reconstruire le texte
-    return " ".join(tokens)
+    # Supprimer diacritiques
+    text = re.sub(r'[\u064B-\u065F]', '', text)
+    
+    # Normaliser lettres
+    text = re.sub(r'[آأإ]', 'ا', text)
+    text = re.sub(r'[ة]', 'ه', text)
+    text = re.sub(r'[ى]', 'ي', text)
+    
+    # Nettoyage
+    text = re.sub(r'ـ', '', text)
+    text = re.sub(r'\d+', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    
+    return text.strip()
+
+def remove_stopwords(text):
+    """Supprimer les stopwords arabes (votre code)"""
+    stopwords = set([
+        'في', 'من', 'إلى', 'على', 'أن', 'إن', 'ما', 'هذا', 'هذه',
+        'ذلك', 'الذي', 'التي', 'الذين', 'كل', 'بعض', 'أي', 'لا',
+        'لم', 'لن', 'هل', 'و', 'ف', 'ثم', 'أو', 'بل', 'لكن', 'إذا'
+    ])
+    
+    words = text.split()
+    filtered_words = [word for word in words if word not in stopwords]
+    return ' '.join(filtered_words)
+
+def prepare_text_for_model(text):
+    """Préparer le texte pour le modèle (combinaison prétraitement + stopwords)"""
+    cleaned_text = arabic_preprocessing(text)
+    cleaned_text = remove_stopwords(cleaned_text)
+    return cleaned_text
 
 # ==================== CHARGEMENT DES MODÈLES ====================
 @st.cache_resource
@@ -1008,6 +965,15 @@ def load_svc_model():
         
         # Charger le modèle LinearSVC
         model = joblib.load(svc_model_path)
+        
+        # Vérifier les classes du modèle et les mapper si nécessaire
+        if hasattr(model, 'classes_'):
+            model_classes = list(model.classes_)
+            
+            # Si les classes sont des nombres (0, 1, 2...), les remplacer par nos catégories
+            if all(isinstance(c, (int, np.integer)) for c in model_classes):
+                if len(CATEGORIES) >= len(model_classes):
+                    model.classes_ = np.array(CATEGORIES)
         
         # Extraire le vectorizer du modèle si disponible
         if hasattr(model, 'named_steps') and 'tfidfvectorizer' in model.named_steps:
@@ -1035,50 +1001,42 @@ def load_svc_model():
 def classify_with_svc(text, model, vectorizer):
     """Classification avec le modèle LinearSVC"""
     try:
-        # Prétraiter le texte
-        cleaned_text = arabic_preprocessing(text)
+        # Prétraiter le texte avec VOTRE méthode
+        cleaned_text = prepare_text_for_model(text)
         
         # Vectoriser le texte
         text_vectorized = vectorizer.transform([cleaned_text])
         
-        # Vérifier la compatibilité des dimensions
-        expected_features = None
-        if hasattr(model, 'coef_'):
-            expected_features = model.coef_.shape[1]
-        elif hasattr(model, 'named_steps') and 'linearsvc' in model.named_steps and hasattr(model.named_steps['linearsvc'], 'coef_'):
-            expected_features = model.named_steps['linearsvc'].coef_.shape[1]
-        actual_features = text_vectorized.shape[1]
-        if expected_features is not None and actual_features != expected_features:
-            st.error(f"❌ Incompatibilité de dimensions: {actual_features} ≠ {expected_features}")
-            return None, None
-        
         # Prédiction
         prediction = model.predict(text_vectorized)[0]
         
-        # Scores de décision (LinearSVC utilise decision_function)
+        # Vérifier le type de prédiction
+        if isinstance(prediction, (int, np.integer)):
+            # Si c'est un nombre, mapper à la catégorie
+            if 0 <= prediction < len(CATEGORIES):
+                predicted_category = CATEGORIES[prediction]
+            else:
+                predicted_category = "Inconnu"
+        else:
+            # Si c'est déjà une catégorie
+            predicted_category = prediction
+        
+        # Récupérer les scores de probabilité
         if hasattr(model, 'predict_proba'):
             probabilities = model.predict_proba(text_vectorized)[0]
         elif hasattr(model, 'decision_function'):
             decision_scores = model.decision_function(text_vectorized)[0]
-
             # Convertir en probabilités avec softmax
             exp_scores = np.exp(decision_scores - np.max(decision_scores))
             probabilities = exp_scores / np.sum(exp_scores)
         else:
-            # Fallback: probabilités uniformes si decision_function non disponible
-            probabilities = np.ones(len(model.classes_)) / len(model.classes_)
-        
-        # Récupérer les noms des catégories
-        if hasattr(model, 'classes_'):
-            category_names = list(model.classes_)
-        else:
-            # Catégories par défaut (basées sur votre dataset)
-            category_names = ['Culture', 'Finance', 'Medical', 'Politics', 'Religion', 'Sports', 'Tech']
+            # Fallback: probabilités uniformes
+            probabilities = np.ones(len(CATEGORIES)) / len(CATEGORIES)
         
         # Créer le dictionnaire de scores
-        scores = {category_names[i]: float(probabilities[i]) for i in range(len(category_names))}
+        scores = {CATEGORIES[i]: float(probabilities[i]) for i in range(len(CATEGORIES))}
         
-        return scores, category_names[prediction] if prediction < len(category_names) else "Inconnu"
+        return scores, predicted_category
     
     except Exception as e:
         st.error(f"❌ Erreur lors de la classification: {str(e)}")
@@ -1107,22 +1065,10 @@ with st.sidebar:
                 st.session_state.svc_model = model
                 st.session_state.svc_vectorizer = vectorizer
                 st.session_state.svc_model_loaded = True
-                #st.success("✅ Modèle chargé")
             else:
-                #st.error("❌ Échec du chargement")
                 st.session_state.svc_model = None
                 st.session_state.svc_vectorizer = None
                 st.session_state.svc_model_loaded = False
-    
-    # Afficher l'état du chargement
-    if st.session_state.get('svc_model_loaded', False):
-        
-        # Informations sur le modèle
-        if st.session_state.svc_model and hasattr(st.session_state.svc_model, 'classes_'):
-            pass
-        
-        if st.session_state.svc_vectorizer and hasattr(st.session_state.svc_vectorizer, 'vocabulary_'):
-            pass
 
 # Header principal
 st.markdown("""
@@ -1142,14 +1088,14 @@ if page == "Accueil":
         st.markdown("""
         **Système de classification automatique de documents journalistiques arabes**
         
-        **7 catégories de classification:**
-        1. **Culture** - Arts, littérature, traditions
-        2. **Finance** - Économie, marchés, affaires
-        3. **Medical** - Santé, médecine, recherche
+        **7 catégories de classification (ordre exact):**
+        1. **Culture** - Arts, littérature, traditions, musique
+        2. **Finance** - Économie, marchés, affaires, investissements
+        3. **Medical** - Santé, médecine, bien-être, recherche médicale
         4. **Politics** - Politique, gouvernements, relations internationales
-        5. **Religion** - Croyances, pratiques religieuses
-        6. **Sports** - Événements sportifs, athlètes
-        7. **Tech** - Technologie, innovation, science
+        5. **Religion** - Croyances, pratiques religieuses, spiritualité
+        6. **Sports** - Événements sportifs, athlètes, compétitions
+        7. **Tech** - Technologie, innovation, IA, informatique
 
         """)
         
@@ -1159,6 +1105,36 @@ if page == "Accueil":
         2. Entrez ou téléchargez un texte arabe
         3. Cliquez sur "Lancer la Classification"
         4. Visualisez les résultats détaillés
+        """)
+        
+        # Afficher le mapping des indices
+        st.markdown("### 🔢 Mapping Indice → Catégorie")
+        st.markdown("""
+        | Indice | Catégorie (EN) | Catégorie (FR) |
+        |--------|----------------|----------------|
+        | 0 | Culture | Culture |
+        | 1 | Finance | Finance |
+        | 2 | Medical | Médical |
+        | 3 | Politics | Politique |
+        | 4 | Religion | Religion |
+        | 5 | Sports | Sports |
+        | 6 | Tech | Technologie |
+        
+        *Cet ordre correspond exactement à l'entraînement du modèle.*
+        """)
+        
+        # Afficher les étapes de prétraitement
+        st.markdown("### 🔧 Étapes de Prétraitement")
+        st.markdown("""
+        1. **Nettoyage des caractères** : Suppression des caractères non-arabes
+        2. **Suppression des diacritiques** : Élimination des signes de vocalisation (tashkeel)
+        3. **Normalisation des lettres** :
+           - آ, أ, إ → ا
+           - ة → ه
+           - ى → ي
+        4. **Suppression des chiffres** : Élimination des nombres
+        5. **Suppression des stopwords** : Filtrage des mots vides arabes
+        6. **Normalisation des espaces** : Uniformisation des espaces multiples
         """)
 
 # Page de test en temps réel
@@ -1194,7 +1170,7 @@ elif page == "Test en Temps Réel":
             ["Écrire/Coller", "Utiliser un exemple"]
         )
         
-        if input_option == "📝 Écrire/Coller":
+        if input_option == "Écrire/Coller":
             text_input = st.text_area(
                 "Texte en arabe:",
                 height=200,
@@ -1203,15 +1179,15 @@ elif page == "Test en Temps Réel":
                 key="manual_text"
             )
         else:
-            # Exemples prédéfinis pour tester différentes catégories
+            # Exemples prédéfinis correspondant à l'ordre des catégories
             example_texts = {
-                "⚽ Exemple Sportif": "مباراة كرة القدم بين برشلونة وريال مدريد كانت مثيرة للغاية وانتهت بفوز برشلونة بثلاثة أهداف مقابل هدفين في دوري أبطال أوروبا",
-                "💰 Exemple Financier": "ارتفع مؤشر الأسهم السعودي اليوم بنسبة 1.5% مدعوماً بصعود أسهم قطاع البنوك والصناعات الأساسية بعد إعلان النتائج المالية",
-                "🏥 Exemple Médical": "اكتشف فريق من الباحثين السعوديين دواءً جديداً لعلاج مرض السكري من النوع الثاني يعتمد على تقنية النانو",
-                "🏛️ Exemple Politique": "انعقد مؤتمر القمة العربية في الرياض لمناقشة القضايا السياسية والأمنية في المنطقة والعلاقات الدولية",
-                "🕌 Exemple Religieux": "تتناول المحاضرة موضوع الأخلاق في الإسلام وأهمية الصدق والأمانة في المعاملات والعلاقات الاجتماعية",
-                "📚 Exemple Culturel": "افتتح معرض الفنون التراثية في المتحف الوطني أبوابه مؤخراً، حيث يعرض مجموعة استثنائية من اللوحات الزيتية والمخطوطات النادرة التي تعود إلى القرن العاشر الميلادي. كما يضم المعرض مقتنيات أثرية ثمينة لا تقدر بثمن، تشمل منحوتات خشبية محفورة يدوياً، ومجموعة من الحلي الذهبية والفضية المرصعة بالأحجار الكريمة، بالإضافة إلى أواني فخارية مزخرفة بأنماط هندسية معقدة تعكس الإبداع الفني للحضارات القديمة في المنطقة.",
-                "💻 Exemple Technologique": "أطلقت شركة سامسونج هاتفها الذكي الجديد بشاشة قابلة للطي وتقنيات متطورة في التصوير والذكاء الاصطناعي"
+                "📚 Exemple Culture (0)": "افتتح معرض الفنون التراثية في المتحف الوطني يعرض لوحات زيتية ومخطوطات نادرة تعود إلى القرن العاشر الميلادي والفنون التشكيلية المعاصرة والمنحوتات الأثرية",
+                "💰 Exemple Finance (1)": "ارتفع مؤشر الأسهم السعودي اليوم بنسبة 1.5% مدعوماً بصعود أسهم قطاع البنوك والصناعات الأساسية بعد إعلان النتائج المالية والأرباح القياسية والتوزيعات النقدية",
+                "🏥 Exemple Medical (2)": "اكتشف فريق من الباحثين السعوديين دواءً جديداً لعلاج مرض السكري من النوع الثاني يعتمد على تقنية النانو والذكاء الاصطناعي في المستشفيات والمراكز البحثية الطبية",
+                "🏛️ Exemple Politics (3)": "انعقد مؤتمر القمة العربية في الرياض لمناقشة القضايا السياسية والأمنية في المنطقة والعلاقات الدولية والدبلوماسية بين الدول والشراكات الاستراتيجية",
+                "🕌 Exemple Religion (4)": "تتناول المحاضرة موضوع الأخلاق في الإسلام وأهمية الصدق والأمانة في المعاملات والعلاقات الاجتماعية والدينية والعبادات والحدود الشرعية والآداب الإسلامية",
+                "⚽ Exemple Sports (5)": "مباراة كرة القدم بين برشلونة وريال مدريد كانت مثيرة للغاية وانتهت بفوز برشلونة بثلاثة أهداف مقابل هدفين في دوري أبطال أوروبا والبطولات المحلية والقارية",
+                "💻 Exemple Tech (6)": "أطلقت شركة سامسونج هاتفها الذكي الجديد بشاشة قابلة للطي وتقنيات متطورة في التصوير والذكاء الاصطناعي والبطارية تدوم ليومين كاملين والشاشة الديناميكية"
             }
             
             selected_example = st.selectbox("Choisissez un exemple:", list(example_texts.keys()))
@@ -1220,6 +1196,12 @@ elif page == "Test en Temps Réel":
             # Afficher le texte choisi
             st.markdown("**Texte sélectionné:**")
             st.markdown(f'<div class="arabic-text">{text_input}</div>', unsafe_allow_html=True)
+            
+            # Afficher quelle catégorie nous attendons
+            expected_idx = int(selected_example.split("(")[1].replace(")", ""))
+            expected_category = CATEGORIES[expected_idx]
+            expected_category_fr = CATEGORIES_FR[expected_idx]
+            st.info(f"**Catégorie attendue:** {expected_category_fr} ({expected_category}) [Indice: {expected_idx}]")
     
     with tab2:
         st.markdown("""
@@ -1279,12 +1261,6 @@ elif page == "Test en Temps Réel":
                 progress_bar.progress(100)
                 
                 if results and predicted_category:
-                    # Définir les catégories
-                    if hasattr(st.session_state.svc_model, 'classes_'):
-                        category_names = list(st.session_state.svc_model.classes_)
-                    else:
-                        category_names = ['Culture', 'Finance', 'Medical', 'Politics', 'Religion', 'Sports', 'Tech']
-                    
                     # Emojis et couleurs pour les catégories
                     category_emojis = {
                         'Culture': '📚',
@@ -1296,18 +1272,32 @@ elif page == "Test en Temps Réel":
                         'Tech': '💻'
                     }
                     
+                    # Traduction française
+                    category_translation = {
+                        'Culture': 'Culture',
+                        'Finance': 'Finance',
+                        'Medical': 'Médical',
+                        'Politics': 'Politique',
+                        'Religion': 'Religion',
+                        'Sports': 'Sports',
+                        'Tech': 'Technologie'
+                    }
+                    
                     category_colors = {
-                        'Culture': '#FF6B6B',
-                        'Finance': '#4ECDC4',
-                        'Medical': '#FFD166',
-                        'Politics': '#06D6A0',
-                        'Religion': '#118AB2',
-                        'Sports': '#EF476F',
-                        'Tech': '#7B68EE'
+                        'Culture': '#FF6B6B',      # Rouge corail
+                        'Finance': '#4ECDC4',      # Turquoise
+                        'Medical': '#FFD166',      # Jaune
+                        'Politics': '#06D6A0',     # Vert émeraude
+                        'Religion': '#118AB2',     # Bleu océan
+                        'Sports': '#EF476F',       # Rose
+                        'Tech': '#7B68EE'          # Violet
                     }
                     
                     # Affichage des résultats
                     st.success("✅ **Classification terminée avec succès!**")
+                    
+                    # Trouver l'indice de la catégorie prédite
+                    predicted_idx = CATEGORIES.index(predicted_category) if predicted_category in CATEGORIES else -1
                     
                     col1, col2 = st.columns([2, 1])
                     
@@ -1315,8 +1305,8 @@ elif page == "Test en Temps Réel":
                         st.markdown("#### 📊 Distribution des Probabilités")
                         
                         # Préparer les données pour le graphique
-                        categories_display = [f"{category_emojis.get(cat, '📋')} {cat}" for cat in category_names]
-                        probabilities = [results.get(cat, 0) for cat in category_names]
+                        categories_display = [f"{category_emojis[cat]} {category_translation[cat]}" for cat in CATEGORIES]
+                        probabilities = [results[cat] for cat in CATEGORIES]
                         
                         # Créer un DataFrame pour le graphique
                         df_results = pd.DataFrame({
@@ -1338,22 +1328,28 @@ elif page == "Test en Temps Réel":
                         )
                         fig.update_layout(yaxis_range=[0, 1], showlegend=False)
                         fig.update_yaxes(tickformat=".0%", title="Probabilité")
-                        fig.update_xaxes(title="Catégorie")
+                        fig.update_xaxes(title="Catégorie", tickangle=45)
                         st.plotly_chart(fig, use_container_width=True)
                         
                         # Tableau détaillé des scores
                         st.markdown("#### 📋 Scores Détailés")
                         
-                        for cat in category_names:
-                            score = results.get(cat, 0)
+                        # Trier les résultats par score décroissant
+                        sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+                        
+                        for cat, score in sorted_results:
                             emoji = category_emojis.get(cat, '📋')
+                            cat_fr = category_translation.get(cat, cat)
+                            idx = CATEGORIES.index(cat) if cat in CATEGORIES else "?"
                             
-                            col_a, col_b, col_c = st.columns([1, 6, 2])
+                            col_a, col_b, col_c, col_d = st.columns([1, 5, 2, 1])
                             with col_a:
                                 st.write(f"**{emoji}**")
                             with col_b:
-                                st.progress(float(score))
+                                st.write(f"**{cat_fr}** (indice: {idx})")
                             with col_c:
+                                st.progress(float(score))
+                            with col_d:
                                 st.write(f"**{score*100:.1f}%**")
                     
                     with col2:
@@ -1362,60 +1358,62 @@ elif page == "Test en Temps Réel":
                         # Récupérer l'emoji et la couleur pour la catégorie prédite
                         pred_emoji = category_emojis.get(predicted_category, '🎯')
                         pred_color = category_colors.get(predicted_category, '#4A90E2')
+                        pred_fr = category_translation.get(predicted_category, predicted_category)
                         
                         # Afficher la carte de résultat
                         st.markdown(f"""
                         <div style="background: {pred_color}; padding: 2rem; border-radius: 15px; color: white; text-align: center;">
-                            <h2>{pred_emoji} {predicted_category}</h2>
+                            <h2>{pred_emoji} {pred_fr}</h2>
+                            <h3 style="margin: 0.5rem 0;">({predicted_category})</h3>
                             <h1 style="font-size: 3rem; margin: 1rem 0;">{results[predicted_category]*100:.1f}%</h1>
                             <p>Confiance de prédiction</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Indice: {predicted_idx}</p>
                         </div>
                         """, unsafe_allow_html=True)
                         
                         # Métriques clés
-                        st.metric("🎯 Catégorie", f"{pred_emoji} {predicted_category}")
+                        st.metric("🎯 Catégorie", f"{pred_emoji} {pred_fr}")
                         st.metric("📊 Confiance", f"{results[predicted_category]*100:.1f}%")
+                        st.metric("🔢 Indice", predicted_idx)
                         
                         # Calculer la marge avec la deuxième catégorie
                         sorted_scores = sorted(results.items(), key=lambda x: x[1], reverse=True)
                         if len(sorted_scores) > 1:
                             margin = sorted_scores[0][1] - sorted_scores[1][1]
-                        
-                        # Information technique
-                        st.markdown('<div class="svc-highlight">', unsafe_allow_html=True)
-                        if hasattr(st.session_state.svc_model, 'coef_'):
-                            pass
-                            #st.write(f"**🔢 Features:** {st.session_state.svc_model.coef_.shape[1]}")
-                        st.markdown('</div>', unsafe_allow_html=True)
+                            st.metric("📈 Marge de victoire", f"{margin*100:.1f}%")
                     
-                    # Section de détails techniques
-                    with st.expander("🔍 Détails Techniques et Analyse"):
+                    # Section d'information technique
+                    with st.expander("🔍 Détails Techniques"):
                         col1, col2 = st.columns(2)
                         
                         with col1:
                             st.markdown("**📊 Statistiques du Texte:**")
-                            
-                            # Calculer les statistiques
                             original_words = text_input.split()
-                            cleaned_text = arabic_preprocessing(text_input)
+                            cleaned_text = prepare_text_for_model(text_input)
                             cleaned_words = cleaned_text.split()
-
+                            
+                            st.write(f"**Mots originaux:** {len(original_words)}")
+                            st.write(f"**Mots après prétraitement:** {len(cleaned_words)}")
+                            if len(original_words) > 0:
+                                reduction_rate = ((len(original_words)-len(cleaned_words))/len(original_words)*100)
+                                st.write(f"**Taux de réduction:** {reduction_rate:.1f}%")
+                            
                             st.markdown("**🔧 Étapes de Prétraitement:**")
-                            st.write("1. Normalisation des caractères arabes")
-                            st.write("2. Suppression des diacritiques (tashkeel)")
-                            st.write("3. Élimination de la ponctuation")
-                            st.write("4. Suppression des chiffres")
-                            st.write("5. Filtrage des stopwords arabes")
-                            st.write("6. Normalisation des espaces")
+                            st.write("✓ Suppression des caractères non-arabes")
+                            st.write("✓ Suppression des diacritiques")
+                            st.write("✓ Normalisation des lettres (آ→ا, ة→ه, ى→ي)")
+                            st.write("✓ Suppression des chiffres")
+                            st.write("✓ Suppression des stopwords")
+                            st.write("✓ Normalisation des espaces")
                         
                         with col2:
-                            st.markdown("**🎯 Analyse des Scores:**")
-                            
-                            # Top 3 catégories
-                            top_3 = sorted(results.items(), key=lambda x: x[1], reverse=True)[:3]
+                            st.markdown("**🎯 Top 3 catégories:**")
+                            top_3 = sorted_results[:3]
                             for i, (cat, score) in enumerate(top_3):
                                 emoji = category_emojis.get(cat, '📋')
-                                st.write(f"{i+1}. {emoji} **{cat}:** {score:.1%}")
+                                cat_fr = category_translation.get(cat, cat)
+                                idx = CATEGORIES.index(cat) if cat in CATEGORIES else "?"
+                                st.write(f"{i+1}. {emoji} **{cat_fr}** ({cat}): {score:.1%}")
                             
                             # Niveau de confiance
                             confidence = results[predicted_category]
@@ -1425,11 +1423,6 @@ elif page == "Test en Temps Réel":
                                 st.write("• 🟡 **Confiance moyenne** (entre 50% et 70%)")
                             else:
                                 st.write("• 🔴 **Confiance faible** (inférieure à 50%)")
-                            
-                            # Informations sur le modèle entraîné
-                            if hasattr(st.session_state.svc_model, 'n_iter_'):
-                                #st.write(f"• **Itérations:** {st.session_state.svc_model.n_iter_}")
-                                pass
             
                 else:
                     st.error("❌ **Échec de la classification**")
